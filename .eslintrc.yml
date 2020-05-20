@@ -1,0 +1,2 @@
+extends:
+  - './node_modules/labforward-config-base/eslint/node.yml'

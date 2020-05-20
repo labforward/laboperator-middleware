@@ -1,0 +1,28 @@
+{
+  "name": "laboperator-middleware",
+  "version": "1.0.0",
+  "description": "Provide common functionality for customized Laboperator middleware.",
+  "main": "src/index.js",
+  "repository": "git@github.com:labforward/laboperator-middleware.git",
+  "author": "ignatius.reza@labforward.io",
+  "license": "Apache-2.0",
+  "private": true,
+  "bin": "./bin/cli.js",
+  "importSort": {
+    ".js, .jsx, .ts, .tsx": {
+      "style": "labforward"
+    }
+  },
+  "dependencies": {
+    "express": "^4.17.1",
+    "http-errors": "^1.7.3",
+    "http-status-codes": "^1.4.0",
+    "morgan": "^1.10.0",
+    "nodemon": "^2.0.4",
+    "winston": "^3.2.1",
+    "yargs": "^15.3.1"
+  },
+  "devDependencies": {
+    "labforward-config-base": "https://github.com/labforward/labforward-config-base#initial"
+  }
+}
