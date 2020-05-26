@@ -8,6 +8,9 @@
   "license": "Apache-2.0",
   "private": true,
   "bin": "./bin/cli.js",
+  "scripts": {
+    "test": "NODE_ENV=test mocha src/test_helper **/*.spec.js"
+  },
   "importSort": {
     ".js, .jsx, .ts, .tsx": {
       "style": "labforward"
@@ -23,6 +26,16 @@
     "yargs": "^15.3.1"
   },
   "devDependencies": {
-    "labforward-config-base": "https://github.com/labforward/labforward-config-base#initial"
+    "chai": "^4.2.0",
+    "chai-http": "^4.3.0",
+    "chai-subset": "^1.6.0",
+    "dirty-chai": "^2.0.1",
+    "eslint-plugin-mocha": "^6.3.0",
+    "labforward-config-base": "https://github.com/labforward/labforward-config-base#initial",
+    "mocha": "^7.2.0",
+    "mocha-junit-reporter": "^1.23.3",
+    "mocha-multi-reporters": "^1.1.7",
+    "sinon": "^9.0.2",
+    "sinon-chai": "^3.5.0"
   }
 }

@@ -4,11 +4,12 @@ const createError = require('http-errors');
 const express = require('express');
 const logger = require('morgan');
 const path = require('path');
+const config = require('./config');
 const helpers = require('./helpers');
 
 const app = express();
 
-app.use(logger('dev'));
+app.use(logger('dev', { stream: config.logger.stream }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 

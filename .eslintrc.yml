@@ -1,2 +1,18 @@
 extends:
   - './node_modules/labforward-config-base/eslint/node.yml'
+overrides:
+  - files:
+      - '**/*.spec.js'
+    env:
+      mocha: true
+    globals:
+      chai: true
+      expect: true
+      request: true
+    plugins:
+      - 'mocha'
+    extends:
+      - 'plugin:mocha/recommended'
+    rules:
+      mocha/no-mocha-arrows: off
+      max-nested-callbacks: off
