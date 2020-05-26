@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-/* eslint-disable import/no-dynamic-require, no-console */
+/* eslint-disable import/no-dynamic-require */
 
 const nodemon = require('nodemon');
 const path = require('path');
@@ -7,8 +7,6 @@ const path = require('path');
 const script = path.resolve(__dirname, '../src/cli');
 
 const argv = require('../src/cli/argv');
-
-console.log(argv);
 
 if (argv.watch) {
   nodemon({
@@ -22,6 +20,7 @@ if (argv.watch) {
       process.exit();
     })
     .on('restart', (files) => {
+      /* eslint-disable-next-line no-console */
       console.log('Server restarted, changes detected: ', files);
     });
 } else {

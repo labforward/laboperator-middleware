@@ -1,7 +1,7 @@
 const argv = require('./argv');
 const app = require('..');
-const helpers = require('../helpers');
+const config = require('../config');
 
 app.listen(argv.port, () => {
-  helpers.logger.info(`Listening at PORT: ${argv.port}`);
+  config.logger.info(`Listening at PORT: ${argv.port}`);
 });
