@@ -1,6 +1,7 @@
 const Ajv = require('ajv');
 const fs = require('fs');
 const path = require('path');
+const url = require('url');
 const yaml = require('yaml');
 
 let config;
@@ -22,6 +23,11 @@ const valid = validator(config);
 
 if (!valid) throw validator.errors;
 
+config.laboperator.url = url.parse(config.laboperator.url);
+config.laboperator.url.origin = config.laboperator.url.href.replace(
+  config.laboperator.url.path,
+  ''
+);
 config.logger = require('./logger');
 
 module.exports = config;
