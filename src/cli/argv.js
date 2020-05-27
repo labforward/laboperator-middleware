@@ -3,7 +3,7 @@ const yargs = require('yargs');
 yargs
   .option('port', {
     alias: 'p',
-    default: 6000,
+    default: 8000,
     description: 'Which port to listen to.',
     type: 'number',
   })

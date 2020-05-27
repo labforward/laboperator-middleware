@@ -1,9 +1,6 @@
-/* eslint-disable import/no-dynamic-require */
-
 const createError = require('http-errors');
 const express = require('express');
 const logger = require('morgan');
-const path = require('path');
 const config = require('./config');
 const helpers = require('./helpers');
 
@@ -13,9 +10,7 @@ app.use(logger('dev', { stream: config.logger.stream }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-// relative to working directory, so that each specialized middleware
-// can provide their own custom routes
-require(path.resolve('./src/routes'))(app);
+helpers.requireRelative('./src/routes')(app);
 
 // default 404 routes
 app.use((req, res, next) => {

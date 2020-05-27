@@ -13,7 +13,6 @@ const logger = winston.createLogger({
               (info) => `${info.timestamp} [${info.level}] ${info.message}`
             )
           ),
-          silent: true,
         })
       : new winston.transports.Console({
           format: winston.format.combine(

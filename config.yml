@@ -1,0 +1,6 @@
+laboperator:
+  url: 'http://localhost:5000/api/v2/main'
+  authentication:
+    clientId: 19f4762b-c9f0-47a4-be67-de3b32ff5954
+    clientSecret: 3273b6aa-e4f2-4da0-96fa-abcb04e07484
+    redirectUri: 'http://localhost:8000/auth/callback'
