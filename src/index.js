@@ -1,6 +1,7 @@
 const createError = require('http-errors');
 const express = require('express');
 const logger = require('morgan');
+const path = require('path');
 const config = require('./config');
 const helpers = require('./helpers');
 
@@ -10,7 +11,11 @@ app.use(logger('dev', { stream: config.logger.stream }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-helpers.requireRelative('./src/routes')(app);
+require('./routes')(app);
+
+if (path.resolve(__dirname) !== path.resolve('./src')) {
+  helpers.requireRelative('./src/routes')(app);
+}
 
 // default 404 routes
 app.use((req, res, next) => {

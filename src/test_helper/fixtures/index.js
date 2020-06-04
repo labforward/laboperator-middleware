@@ -1,1 +1,5 @@
-module.exports = [...require('./documentation'), ...require('./oauth')];
+module.exports = [
+  ...require('./authentications'),
+  ...require('./documentation'),
+  ...require('./oauth'),
+];
