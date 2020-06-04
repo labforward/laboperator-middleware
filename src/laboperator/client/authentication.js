@@ -3,6 +3,7 @@ const fetch = require('swagger-client').http;
 const _ = require('lodash');
 const config = require('../../config');
 const helpers = require('../../helpers');
+const store = require('../../store')('tokens');
 const { APIError } = require('../../errors');
 
 const timeouts = {};
@@ -59,8 +60,15 @@ function update(user, newTokens) {
   tokens[user] = tokens[user] || {};
 
   Object.assign(tokens[user], newTokens);
+  store.save(tokens);
 
   refreshToken(user);
+}
+
+if (process.env.NODE_ENV !== 'test') {
+  Object.assign(tokens, store.load());
+
+  _.forEach(_.keys(tokens), refreshToken);
 }
 
 module.exports = {
