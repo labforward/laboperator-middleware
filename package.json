@@ -9,7 +9,7 @@
   "private": true,
   "bin": "./bin/cli.js",
   "scripts": {
-    "test": "NODE_ENV=test mocha src/test_helper **/*.spec.js"
+    "test": "NODE_ENV=test mocha src/test_helper \"src/**/*.spec.js\" --timeout 5000"
   },
   "importSort": {
     ".js, .jsx, .ts, .tsx": {
@@ -17,12 +17,18 @@
     }
   },
   "dependencies": {
+    "ajv": "^6.12.2",
+    "camelcase-keys": "^6.2.2",
     "express": "^4.17.1",
     "http-errors": "^1.7.3",
     "http-status-codes": "^1.4.0",
+    "lodash": "^4.17.15",
     "morgan": "^1.10.0",
     "nodemon": "^2.0.4",
+    "snakecase-keys": "^3.2.0",
+    "swagger-client": "^3.10.4",
     "winston": "^3.2.1",
+    "yaml": "^1.10.0",
     "yargs": "^15.3.1"
   },
   "devDependencies": {
@@ -31,7 +37,8 @@
     "chai-subset": "^1.6.0",
     "dirty-chai": "^2.0.1",
     "eslint-plugin-mocha": "^6.3.0",
-    "labforward-config-base": "https://github.com/labforward/labforward-config-base#initial",
+    "fetch-mock": "^9.10.1",
+    "labforward-config-base": "https://github.com/labforward/labforward-config-base",
     "mocha": "^7.2.0",
     "mocha-junit-reporter": "^1.23.3",
     "mocha-multi-reporters": "^1.1.7",

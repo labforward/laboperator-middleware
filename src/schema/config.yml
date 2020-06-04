@@ -1,0 +1,38 @@
+---
+type: object
+title: Middleware Configuration Schema
+required:
+  - laboperator
+properties:
+  laboperator:
+    type: object
+    required:
+      - url
+      - authentication
+    properties:
+      url:
+        type: string
+        format: uri
+        pattern: '^https?://'
+      authentication:
+        type: object
+        required:
+          - clientId
+          - clientSecret
+          - redirectUri
+        properties:
+          grantType:
+            type: string
+            enum:
+              - client_credentials
+              - password
+            default: client_credentials
+          scope:
+            type: string
+            default: read
+          clientId:
+            type: string
+          clientSecret:
+            type: string
+          redirectUri:
+            type: string

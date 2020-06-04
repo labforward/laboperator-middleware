@@ -16,3 +16,12 @@ overrides:
     rules:
       mocha/no-mocha-arrows: off
       max-nested-callbacks: off
+  - files:
+      - 'src/test_helper/**/*.js'
+    rules:
+      mocha/no-hooks-for-single-case: off
+      mocha/no-top-level-hooks: off
+  - files:
+      - 'src/test_helper/fixtures/*.js'
+    rules:
+      camelcase: off
