@@ -1,7 +1,5 @@
-const argv = require('./argv');
-const app = require('..');
-const config = require('../config');
+const args = require('./args');
+const server = require('./server');
+const init = require('./init');
 
-app.listen(argv.port, () => {
-  config.logger.info(`Listening at PORT: ${argv.port}`);
-});
+args({ server, init });

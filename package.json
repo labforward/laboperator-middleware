@@ -3,11 +3,18 @@
   "version": "1.0.0",
   "description": "Provide common functionality for customized Laboperator middleware.",
   "main": "src/index.js",
+  "exports": {
+    "./config": "./src/config",
+    "./errors": "./src/errors",
+    "./helpers": "./src/helpers",
+    "./laboperator": "./src/laboperator",
+    "./test_helper": "./src/test_helper"
+  },
   "repository": "git@github.com:labforward/laboperator-middleware.git",
   "author": "ignatius.reza@labforward.io",
   "license": "Apache-2.0",
   "private": true,
-  "bin": "./bin/cli.js",
+  "bin": "./bin/cli",
   "scripts": {
     "test": "NODE_ENV=test mocha src/test_helper \"src/**/*.spec.js\" --timeout 5000"
   },
@@ -20,6 +27,8 @@
     "ajv": "^6.12.2",
     "camelcase-keys": "^6.2.2",
     "express": "^4.17.1",
+    "findup-sync": "^4.0.0",
+    "fs-extra": "^9.0.1",
     "http-errors": "^1.7.3",
     "http-status-codes": "^1.4.0",
     "lodash": "^4.17.15",
