@@ -16,7 +16,7 @@
   "private": true,
   "bin": "./bin/cli",
   "scripts": {
-    "test": "NODE_ENV=test mocha src/test_helper \"src/**/*.spec.js\" --timeout 5000"
+    "test": "./bin/cli test -- --ignore \\\"src/templates/\\*\\*\\\" --watch-ignore \\\"src/templates/\\*\\*\\\""
   },
   "importSort": {
     ".js, .jsx, .ts, .tsx": {

@@ -15,14 +15,22 @@ const serverOption = (command) =>
       type: 'boolean',
     });
 
+const testOption = (command) =>
+  command.option('ci', {
+    default: false,
+    description: 'Run in CI mode.',
+    type: 'boolean',
+  });
+
 yargs
   .command('server', 'Start the server', serverOption)
   .command('init', 'Initialize a new middleware')
+  .command('test', 'Run specs', testOption)
   .alias('server', 's')
   .help()
   .alias('help', 'h');
 
-module.exports = ({ server, init }) => {
+module.exports = ({ server, init, test }) => {
   const { argv } = yargs;
   const [command] = argv._;
 
@@ -33,6 +41,9 @@ module.exports = ({ server, init }) => {
     }
     case 'init':
       init(argv);
+      break;
+    case 'test':
+      test(argv);
       break;
     default:
       yargs.showHelp();

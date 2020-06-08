@@ -1,9 +1,9 @@
-const app = require('.');
+const { server } = require('./test_helper');
 
 describe('Built-in Routes', () => {
   describe('GET /', () => {
     it('should be okay', async () => {
-      const response = await request(app).get('/');
+      const response = await server().get('/');
 
       expect(response).to.have.status(200);
       expect(response.body).to.containSubset({
@@ -16,9 +16,7 @@ describe('Built-in Routes', () => {
   describe('GET /auth/callback', () => {
     context('given valid code', () => {
       it('response 200', async () => {
-        const response = await request(app).get(
-          '/auth/callback?code=valid-code'
-        );
+        const response = await server().get('/auth/callback?code=valid-code');
 
         expect(response).to.have.status(200);
         expect(response.body).to.containSubset({
@@ -28,7 +26,7 @@ describe('Built-in Routes', () => {
       });
 
       it("resolve into user's accessTokens", async () => {
-        await request(app).get('/auth/callback?code=valid-code');
+        await server().get('/auth/callback?code=valid-code');
         const client = await require('./laboperator').client;
 
         expect(client.authentication.get('1', 'laboperator')).to.eql(
@@ -42,7 +40,7 @@ describe('Built-in Routes', () => {
 
     context('given missing code (e.g. user deny the authorization)', () => {
       it('response 200', async () => {
-        const response = await request(app).get(
+        const response = await server().get(
           '/auth/callback?error=access_denied&error_description=The+resource+owner+or+authorization+server+denied+the+request.'
         );
 
@@ -56,9 +54,7 @@ describe('Built-in Routes', () => {
 
     context('given invalid code', () => {
       it('response 400 in case of invalid code', async () => {
-        const response = await request(app).get(
-          '/auth/callback?code=invalid-code'
-        );
+        const response = await server().get('/auth/callback?code=invalid-code');
 
         expect(response).to.have.status(400);
         expect(response.body).to.containSubset({
@@ -73,7 +69,7 @@ describe('Built-in Routes', () => {
 
   describe('GET /unknown', () => {
     it('response with 404', async () => {
-      const response = await request(app).get('/unknown');
+      const response = await server().get('/unknown');
 
       expect(response).to.have.status(404);
       expect(response.body).to.containSubset({

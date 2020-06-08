@@ -29,7 +29,6 @@ args({
       require(script);
     }
   },
-  init: () => {
-    require(script);
-  },
+  init: () => require(script),
+  test: () => require(script),
 });

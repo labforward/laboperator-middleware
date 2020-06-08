@@ -45,7 +45,7 @@ jobs:
       - *save_cache
 
       # Run rspec in parallel
-      - run: yarn test --no-interactive --reporter mocha-multi-reporters --reporter-options configFile=reporters.json
+      - run: npx laboperator-middleware test --ci
 
       # Save test results for timing analysis
       - store_test_results:
