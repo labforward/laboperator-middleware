@@ -4,11 +4,11 @@
   "description": "Provide common functionality for customized Laboperator middleware.",
   "main": "src/index.js",
   "exports": {
-    "./config": "./src/config",
-    "./errors": "./src/errors",
-    "./helpers": "./src/helpers",
-    "./laboperator": "./src/laboperator",
-    "./test_helper": "./src/test_helper"
+    "./config": "./src/config/index.js",
+    "./errors": "./src/errors/index.js",
+    "./helpers": "./src/helpers/index.js",
+    "./laboperator": "./src/laboperator/index.js",
+    "./test_helper": "./src/test_helper/index.js"
   },
   "repository": "git@github.com:labforward/laboperator-middleware.git",
   "author": "ignatius.reza@labforward.io",
