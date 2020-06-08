@@ -36,3 +36,12 @@ properties:
             type: string
           redirectUri:
             type: string
+additionalProperties:
+  type: object
+  required:
+    - url
+  properties:
+    url:
+      type: string
+      format: uri
+      pattern: '^https?://'

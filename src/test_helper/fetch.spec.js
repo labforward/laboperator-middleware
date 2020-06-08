@@ -1,17 +1,12 @@
 const fetchMock = require('fetch-mock');
 const _ = require('lodash');
-const path = require('path');
 const config = require('../config');
-const helpers = require('../helpers');
 
-let mocks = require('./fixtures');
+const mocks = {};
 
-if (path.resolve(__dirname) !== path.resolve('./src/test_helper')) {
-  mocks = [
-    ...mocks,
-    ...helpers.requireRelative('./src/test_helper/fixtures'), // additional fixtures added by the specialized middleware
-  ];
-}
+const addFixtures = (provider, fixtures) => {
+  mocks[provider] = [...(mocks[provider] || []), ...fixtures];
+};
 
 const headers = { 'Content-Type': 'application/json' };
 const normalize = (object, key) => {
@@ -24,13 +19,14 @@ const normalize = (object, key) => {
   return { headers, body: raw };
 };
 
-const getEndpoint = (url) =>
-  url
-    .replace(config.laboperator.url.origin, '')
-    .replace(config.laboperator.url.path, '');
+const getProvider = (url) =>
+  _.findKey(mocks, (provider, key) => url.startsWith(key));
 
-const getMock = (endpoint, { body }) =>
-  mocks.find(
+const getMock = (url, { body }) => {
+  const provider = getProvider(url);
+  const endpoint = url.replace(provider, '');
+
+  return (mocks[provider] || []).find(
     (mock) =>
       mock.endpoint === endpoint &&
       _.isMatch(
@@ -38,9 +34,17 @@ const getMock = (endpoint, { body }) =>
         normalize(mock, 'request').body
       )
   );
-const matcher = (url, options) => !!getMock(getEndpoint(url), options);
+};
+const matcher = (url, options) => !!getMock(url, options);
 const getResponse = (url, options) =>
-  normalize(getMock(getEndpoint(url), options), 'response');
+  normalize(getMock(url, options), 'response');
 
 beforeEach(() => fetchMock.mock(matcher, getResponse));
 afterEach(() => fetchMock.restore());
+
+addFixtures(config.laboperator.url.href, require('./fixtures'));
+addFixtures(config.laboperator.url.origin, require('./fixtures'));
+
+module.exports = {
+  addFixtures,
+};

@@ -6,23 +6,29 @@ const path = require('path');
 
 const script = path.resolve(__dirname, '../src/cli');
 
-const argv = require('../src/cli/argv');
+const args = require('../src/cli/args');
 
-if (argv.watch) {
-  nodemon({
-    script,
-    ext: 'js',
-    args: process.argv,
-  });
+args({
+  server: (argv) => {
+    if (argv.watch) {
+      nodemon({
+        script,
+        ext: 'js',
+        args: process.argv.slice(2),
+      });
 
-  nodemon
-    .on('quit', () => {
-      process.exit();
-    })
-    .on('restart', (files) => {
-      /* eslint-disable-next-line no-console */
-      console.log('Server restarted, changes detected: ', files);
-    });
-} else {
-  require(script);
-}
+      nodemon
+        .on('quit', () => {
+          process.exit();
+        })
+        .on('restart', (files) => {
+          /* eslint-disable-next-line no-console */
+          console.log('Server restarted, changes detected: ', files);
+        });
+    } else {
+      require(script);
+    }
+  },
+  init: () => require(script),
+  test: () => require(script),
+});
