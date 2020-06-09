@@ -25,4 +25,18 @@ module.exports = [
       data: authentication1,
     },
   },
+  {
+    endpoint: '/authentications/invalid-id',
+    response: {
+      status: 401,
+      body: {
+        errors: [
+          {
+            status: 401,
+            detail: 'Authentication failed. The access token is invalid.',
+          },
+        ],
+      },
+    },
+  },
 ];
