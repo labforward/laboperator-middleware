@@ -1,8 +1,9 @@
-const findup = require('findup-sync');
-const nodeModules = findup('node_modules');
+const path = require('path');
 
 module.exports = {
-  extends: [`${nodeModules}/labforward-config-base/eslint/node.yml`],
+  extends: [
+    path.resolve('node_modules/labforward-config-base/eslint/node.yml'),
+  ],
   rules: {
     'import/no-unresolved': [
       'error',
