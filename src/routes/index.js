@@ -2,6 +2,8 @@ const config = require('../config');
 const helpers = require('../helpers');
 
 module.exports = (app) => {
+  const laboperator = require('../laboperator');
+
   app.get('/', (req, res) => {
     res.json(helpers.jsonResponse(200));
   });
@@ -10,8 +12,6 @@ module.exports = (app) => {
     let error;
 
     try {
-      const laboperator = require('../laboperator');
-
       await laboperator.apis.authenticateUser(req.query);
     } catch (e) {
       config.logger.error(

@@ -1,3 +1,1 @@
-const app = require('..');
-
-module.exports = () => request(app);
+module.exports = () => request(require('..'));
