@@ -27,7 +27,7 @@ app.use((err, req, res, _next) => {
   const status = err.status || 500;
 
   res.status(status);
-  res.json(helpers.jsonResponse(status, err.message));
+  res.json(helpers.jsonResponse(status, helpers.getErrorMessage(err)));
 });
 
 module.exports = app;
