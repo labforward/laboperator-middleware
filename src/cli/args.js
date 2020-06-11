@@ -22,30 +22,33 @@ const testOption = (command) =>
     type: 'boolean',
   });
 
-yargs
+const buildOption = (command) =>
+  command.positional('tag', {
+    describe: 'the image tag',
+    type: 'string',
+  });
+
+const cli = yargs
   .command('server', 'Start the server', serverOption)
   .command('init', 'Initialize a new middleware')
   .command('test', 'Run specs', testOption)
+  .command(
+    'build <tag>',
+    'Package the middleware into docker image',
+    buildOption
+  )
   .alias('server', 's')
   .help()
   .alias('help', 'h');
 
-module.exports = ({ server, init, test }) => {
-  const { argv } = yargs;
+module.exports = (handlers) => {
+  const argv = cli.parse();
   const [command] = argv._;
+  const handler = handlers[command] || handlers.default;
 
-  switch (command) {
-    case 'server': {
-      server(argv);
-      break;
-    }
-    case 'init':
-      init(argv);
-      break;
-    case 'test':
-      test(argv);
-      break;
-    default:
-      yargs.showHelp();
+  if (handler) {
+    handler(argv);
+  } else {
+    yargs.showHelp();
   }
 };
