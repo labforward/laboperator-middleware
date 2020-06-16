@@ -9,6 +9,7 @@ const script = path.resolve(__dirname, '../src/cli');
 const args = require('../src/cli/args');
 
 args({
+  default: () => require(script),
   server: (argv) => {
     if (argv.watch) {
       nodemon({
@@ -29,6 +30,4 @@ args({
       require(script);
     }
   },
-  init: () => require(script),
-  test: () => require(script),
 });

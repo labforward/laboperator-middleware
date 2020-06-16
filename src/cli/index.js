@@ -1,6 +1,7 @@
 const args = require('./args');
-const server = require('./server');
+const build = require('./build');
 const init = require('./init');
+const server = require('./server');
 const test = require('./test');
 
-args({ server, init, test });
+args({ server, init, test, build });

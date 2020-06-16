@@ -52,3 +52,15 @@ You can also run it in watch mode:
 ```
 npx laboperator-middleware test --watch
 ```
+
+## Building server
+
+The library come with a utility for building the middleware into docker image. To do so, you can run
+
+```
+npx laboperator-middleware build <tag>
+```
+
+on which `tag` is the docker image tag that you would like to use for that specific build, e.g. `special-middleware:v1.0.0`.
+
+You can then find the build in `build/special-middleware-v1.0.0.tar`
