@@ -30,7 +30,7 @@
     "fs-extra": "^9.0.1",
     "http-errors": "^1.7.3",
     "http-status-codes": "^1.4.0",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.19",
     "morgan": "^1.10.0",
     "nodemon": "^2.0.4",
     "snakecase-keys": "^3.2.0",
