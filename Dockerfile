@@ -24,7 +24,7 @@ COPY . /middleware
 ################################
 # Stage: Final (production/test)
 ################################
-FROM node:8-alpine as final
+FROM node:lts-alpine as final
 
 ARG environment=production
 ENV NODE_ENV=$environment
