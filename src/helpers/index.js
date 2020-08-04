@@ -1,5 +1,5 @@
 module.exports = {
-  fetch: require('swagger-client').http,
+  fetch: require('./fetch'),
   getErrorMessage: require('./getErrorMessage'),
   jsonResponse: require('./jsonResponse'),
   propagateErrors: require('./propagateErrors'),

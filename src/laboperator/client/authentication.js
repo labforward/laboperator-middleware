@@ -1,8 +1,7 @@
 const camelCaseKeys = require('camelcase-keys');
-const fetch = require('swagger-client').http;
 const _ = require('lodash');
 const config = require('../../config');
-const helpers = require('../../helpers');
+const { fetch, stringifyJSONParams } = require('../../helpers');
 const store = require('../../store')('tokens');
 const { APIError } = require('../../errors');
 
@@ -13,7 +12,7 @@ const fetchToken = async (body) => {
   const response = await fetch({
     url: `${config.laboperator.url.origin}/oauth/token`,
     method: 'post',
-    body: helpers.stringifyJSONParams({
+    body: stringifyJSONParams({
       ...config.laboperator.authentication,
       ...body,
     }),
