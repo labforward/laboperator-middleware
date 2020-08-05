@@ -1,8 +1,8 @@
 const config = require('../config');
 
 class APIError extends Error {
-  constructor(message) {
-    config.logger.error(`[API] Error: ${message}`);
+  constructor(application, message) {
+    config.logger.error(`[API][${application}] Error: ${message}`);
 
     super(message);
   }

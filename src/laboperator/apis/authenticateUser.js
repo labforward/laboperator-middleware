@@ -1,30 +1,18 @@
 const _ = require('lodash');
-const getAuthentications = require('./getAuthentications');
+const getTokenInfo = require('./getTokenInfo');
 const { AuthorizationDeniedError } = require('../../errors');
 
 module.exports = async (query = {}) => {
-  if (!query.code) throw new AuthorizationDeniedError(query);
+  if (!query.code) throw new AuthorizationDeniedError('laboperator', query);
 
   const client = await require('../client');
+  const { authentication } = client;
 
-  const response = await client.authentication.fetchToken({
+  const token = await authentication.fetchToken({
     grantType: 'authorization_code',
     code: query.code,
   });
+  const tokenInfo = await getTokenInfo(token.accessToken);
 
-  const authentications = await getAuthentications(
-    client.authenticateWith(response.accessToken)
-  );
-
-  client.authentication.update(authentications[0].userId, {
-    ..._.reduce(
-      authentications,
-      (prev, authentication) => ({
-        ...prev,
-        [_.camelCase(authentication.provider)]: authentication,
-      }),
-      {}
-    ),
-    laboperator: response,
-  });
+  authentication.update(tokenInfo.resourceOwnerId, token);
 };

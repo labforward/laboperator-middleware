@@ -1,4 +1,5 @@
 module.exports = {
+  authentication: require('./authentication'),
   fetch: require('./fetch'),
   getErrorMessage: require('./getErrorMessage'),
   jsonResponse: require('./jsonResponse'),

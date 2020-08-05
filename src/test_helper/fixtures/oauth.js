@@ -43,4 +43,15 @@ module.exports = [
       created_at: Number(new Date()),
     },
   },
+  {
+    endpoint: '/oauth/token/info?access_token=laboperator-access-token',
+    response: {
+      resource_owner_id: 1,
+      scope: ['read'],
+      expires_in: 3600,
+      application: {
+        uid: '19f4762b-c9f0-47a4-be67-de3b32ff5954',
+      },
+    },
+  },
 ];

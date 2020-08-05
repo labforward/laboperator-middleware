@@ -29,11 +29,8 @@ describe('Built-in Routes', () => {
         await server().get('/auth/callback?code=valid-code');
         const client = await require('./laboperator').client;
 
-        expect(client.authentication.get('1', 'laboperator')).to.eql(
+        expect(client.authentication.get('1')).to.eql(
           'laboperator-access-token'
-        );
-        expect(client.authentication.get('1', 'openidConnect')).to.eql(
-          'external-access-token'
         );
       });
     });
@@ -48,6 +45,8 @@ describe('Built-in Routes', () => {
         expect(response.body).to.containSubset({
           status: 'OK',
           code: 200,
+          details:
+            'The resource owner or authorization server denied the request.',
         });
       });
     });

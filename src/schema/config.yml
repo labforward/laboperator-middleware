@@ -28,6 +28,11 @@ properties:
                 type: string
                 format: uri
                 pattern: '^https?://'
+              serializer:
+                type: string
+                enum:
+                  - multipart/form-data
+                  - application/json
               proxy:
                 type: string
                 format: uri
