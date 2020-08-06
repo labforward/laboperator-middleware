@@ -5,6 +5,9 @@ const authentication1 = {
     provider: 'openid_connect',
     uid: 'test@example.com',
     access_token: 'external-access-token',
+    expires_in: 3600,
+    refresh_token: 'external-refresh-token',
+    created_at: Number(new Date()) / 1000,
   },
   relationships: { user: { data: { id: '1', type: 'user' } } },
   links: {

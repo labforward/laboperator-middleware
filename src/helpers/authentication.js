@@ -43,6 +43,14 @@ const serializerFor = (serializer) => {
   }
 };
 
+const toMilliseconds = (timestamp) => {
+  if (_.isString(timestamp)) return Number(new Date(timestamp)); // ISO8601 string
+
+  if (timestamp < 1577836800000) return Number(new Date(timestamp * 1000)); // timestamp as seconds
+
+  return Number(new Date(timestamp)); // timestamp as milliseconds
+};
+
 module.exports = (application) => {
   if (authentications[application]) return authentications[application];
 
@@ -81,6 +89,11 @@ module.exports = (application) => {
 
     clearTimeout(timeouts[user]);
 
+    const token = tokens[user];
+    const createdAt = toMilliseconds(token.createdAt);
+    const expiresIn = toMilliseconds(tokens[user].expiresIn);
+    const expiresAt = createdAt + expiresIn;
+
     timeouts[user] = setTimeout(async () => {
       config.logger.debug(`[API][${application} Starting Refreshing Token`);
 
@@ -94,7 +107,7 @@ module.exports = (application) => {
       config.logger.debug(`[API][${application} Completed Refreshing Token`);
 
       refreshToken(user);
-    }, (tokens[user].expiresIn - 300) * 1000);
+    }, expiresAt - Number(new Date()) - 600_000); // refresh 10 minutes before expected expiry
   };
 
   function get(user = 'default') {

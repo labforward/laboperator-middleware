@@ -11,7 +11,7 @@ module.exports = [
       expires_in: 3600,
       refresh_token: 'laboperator-refresh-token',
       scope: 'read',
-      created_at: Number(new Date()),
+      created_at: Number(new Date()) / 1000,
     },
   },
   {
@@ -40,7 +40,7 @@ module.exports = [
       expires_in: 3600,
       refresh_token: '123e5850-a3a7-45d0-95d5-5959717b855d',
       scope: 'read',
-      created_at: Number(new Date()),
+      created_at: Number(new Date()) / 1000,
     },
   },
   {
