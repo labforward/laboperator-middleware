@@ -26,6 +26,8 @@ app.use((req, res, next) => {
 app.use((err, req, res, _next) => {
   const status = err.status || 500;
 
+  if (status !== 200) config.logger.error(err);
+
   res.status(status);
   res.json(helpers.jsonResponse(status, helpers.getErrorMessage(err)));
 });
