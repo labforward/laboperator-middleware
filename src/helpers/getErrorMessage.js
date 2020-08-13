@@ -3,9 +3,10 @@ module.exports = (e) => {
 
   // rejected fetch request
   if (e.response) {
-    const { body } = e.response;
+    const { body = {} } = e.response;
+    const { errors: [error] = [] } = body;
 
-    message = body.error_description;
+    message = (error && error.detail) || body.error_description;
   }
 
   // Error object

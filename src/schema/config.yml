@@ -17,25 +17,61 @@ properties:
       authentication:
         type: object
         required:
-          - clientId
-          - clientSecret
-          - redirectUri
+          - token
         properties:
-          grantType:
-            type: string
-            enum:
-              - client_credentials
-              - password
-            default: client_credentials
-          scope:
-            type: string
-            default: read
-          clientId:
-            type: string
-          clientSecret:
-            type: string
-          redirectUri:
-            type: string
+          token:
+            type: object
+            require:
+              - url
+            properties:
+              url:
+                type: string
+                format: uri
+                pattern: '^https?://'
+              serializer:
+                type: string
+                enum:
+                  - multipart/form-data
+                  - application/json
+              proxy:
+                type: string
+                format: uri
+                pattern: '^https?://'
+              options:
+                type: object
+                default: {}
+                require:
+                  - clientId
+                  - clientSecret
+                properties:
+                  grantType:
+                    type: string
+                    enum:
+                      - client_credentials
+                      - password
+                    default: client_credentials
+                  scope:
+                    type: string
+                    default: read
+                  clientId:
+                    type: string
+                  clientSecret:
+                    type: string
+                  redirectUri:
+                    type: string
+          tokenInfo:
+            type: object
+            require:
+              - url
+            properties:
+              url:
+                type: string
+                format: uri
+                pattern: '^https?://'
+              proxy:
+                type: string
+                format: uri
+                pattern: '^https?://'
 additionalProperties:
   type: object
   required:

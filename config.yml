@@ -1,8 +1,21 @@
 laboperator:
   url: 'http://localhost:5000/api/v2/main'
   authentication:
-    clientId: 19f4762b-c9f0-47a4-be67-de3b32ff5954
-    clientSecret: 3273b6aa-e4f2-4da0-96fa-abcb04e07484
-    redirectUri: 'http://localhost:8000/auth/callback'
+    token:
+      url: http://localhost:5000/oauth/token
+      options:
+        clientId: 19f4762b-c9f0-47a4-be67-de3b32ff5954
+        clientSecret: 3273b6aa-e4f2-4da0-96fa-abcb04e07484
+        redirectUri: 'http://localhost:8000/auth/callback'
+    tokenInfo:
+      url: http://localhost:5000/oauth/token/info
 example:
-  url: 'http://example.com'
+  url: 'http://example.com/api'
+  authentication:
+    token:
+      url: http://example.com/oauth2/v2.0/token
+      proxy: http://proxy.example.com
+      options:
+        clientId: 8b00a119-c7a9-419d-b8a3-9e0b0a6e0a89
+        clientSecret: d9e0f270-9d98-424f-9a7f-dc2dd8a1eb6f
+        scope: app://example/resources.read

@@ -43,7 +43,7 @@ module.exports = {
       },
     },
     {
-      files: ['src/test_helper/fixtures/*.js'],
+      files: ['src/test_helper/fixtures/**/*.js'],
       rules: {
         camelcase: 'off',
       },

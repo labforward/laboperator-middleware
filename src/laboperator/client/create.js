@@ -6,19 +6,8 @@ const { APIError } = require('../../errors');
 const initialize = async () => {
   const response = await authentication.fetchToken();
 
-  authentication.update('default', { laboperator: response });
+  authentication.update('default', response);
 };
-
-const authenticateWith = (token) => ({
-  requestInterceptor: (request) => {
-    request.headers.Authorization = `Bearer ${token}`;
-
-    return request;
-  },
-});
-
-const authenticateAsUser = (user = 'default') =>
-  authenticateWith(authentication.get(user, 'laboperator'));
 
 module.exports = async () => {
   config.logger.debug('[API] Initializing Laboperator API Client');
@@ -27,14 +16,14 @@ module.exports = async () => {
 
   const client = await new SwaggerClient({
     url: `${config.laboperator.url.href}/documentation.json`,
-    ...authenticateAsUser(),
+    ...authentication.authenticateAsUser(),
   });
 
-  if (client.errors.length) throw new APIError(`Failed with ${client.errors}`);
+  if (client.errors.length) {
+    throw new APIError('laboperator', `Failed with ${client.errors}`);
+  }
 
   client.authentication = authentication;
-  client.authenticateAsUser = authenticateAsUser;
-  client.authenticateWith = authenticateWith;
 
   config.logger.debug('[API] Laboperator API Client Initialized');
 
