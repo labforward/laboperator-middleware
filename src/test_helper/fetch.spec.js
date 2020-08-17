@@ -22,13 +22,14 @@ const normalize = (object, key) => {
 const getProvider = (url) =>
   _.findKey(mocks, (provider, key) => url.startsWith(key));
 
-const getMock = (url, { body }) => {
+const getMock = (url, { body, method }) => {
   const provider = getProvider(url);
   const endpoint = url.replace(provider, '');
 
   return (mocks[provider] || []).find(
     (mock) =>
       mock.endpoint === endpoint &&
+      _.lowerCase(mock.method || 'get') === _.lowerCase(method || 'get') &&
       _.isMatch(
         _.isString(body) ? JSON.parse(body) : body,
         normalize(mock, 'request').body
