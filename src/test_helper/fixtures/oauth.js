@@ -1,6 +1,7 @@
 module.exports = [
   {
     endpoint: '/oauth/token',
+    method: 'post',
     request: {
       grant_type: 'authorization_code',
       code: 'valid-code',
@@ -16,6 +17,7 @@ module.exports = [
   },
   {
     endpoint: '/oauth/token',
+    method: 'post',
     request: {
       grant_type: 'authorization_code',
       code: 'invalid-code',
@@ -31,6 +33,7 @@ module.exports = [
   },
   {
     endpoint: '/oauth/token',
+    method: 'post',
     request: {
       grant_type: 'client_credentials',
     },
