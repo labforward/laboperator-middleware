@@ -4,7 +4,13 @@ const authentication = require('./authentication');
 const { APIError } = require('../../errors');
 
 const initialize = async () => {
-  const response = await authentication.fetchToken();
+  const response = await authentication.fetchToken(
+    {},
+    {
+      retries: 10,
+      retryDelay: (attempt) => Math.pow(2, attempt) * 1000,
+    }
+  );
 
   authentication.update('default', response);
 };

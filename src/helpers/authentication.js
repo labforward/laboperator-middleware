@@ -60,17 +60,18 @@ module.exports = (application) => {
 
   const authenticateAsUser = (user) => authenticateWith(get(user));
 
-  const fetchToken = async (body) => {
+  const fetchToken = async (body, options) => {
     const { authentication } = config[application];
-    const { options, serializer, ...rest } = authentication.token;
+    const { options: tokenOptions, serializer, ...rest } = authentication.token;
     const response = await fetch({
       ...rest,
       method: 'post',
       body: serializerFor(serializer)({
-        ...options,
+        ...tokenOptions,
         ...body,
       }),
       headers: headersFor(serializer),
+      ...options,
     });
 
     if (!response.ok) {
