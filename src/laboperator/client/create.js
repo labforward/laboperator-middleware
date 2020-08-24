@@ -4,7 +4,22 @@ const authentication = require('./authentication');
 const { APIError } = require('../../errors');
 
 const initialize = async () => {
-  const response = await authentication.fetchToken();
+  const response = await authentication.fetchToken(
+    {},
+    {
+      retries: 10,
+      retryDelay: (attempt) => {
+        const seconds = Math.pow(2, attempt + 1);
+
+        config.logger.debug(
+          `[API][Attempt#${
+            attempt + 1
+          }] Failed to connect to Laboperator API! Retrying in ${seconds} seconds`
+        );
+        return seconds * 1000;
+      },
+    }
+  );
 
   authentication.update('default', response);
 };
