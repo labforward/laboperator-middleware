@@ -8,7 +8,16 @@ const initialize = async () => {
     {},
     {
       retries: 10,
-      retryDelay: (attempt) => Math.pow(2, attempt) * 1000,
+      retryDelay: (attempt) => {
+        const seconds = Math.pow(2, attempt + 1);
+
+        config.logger.debug(
+          `[API][Attempt#${
+            attempt + 1
+          }] Failed to connect to Laboperator API! Retrying in ${seconds} seconds`
+        );
+        return seconds * 1000;
+      },
     }
   );
 
