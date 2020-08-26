@@ -118,7 +118,10 @@ module.exports = (application) => {
   function update(user, newTokens) {
     tokens[user] = tokens[user] || {};
 
-    Object.assign(tokens[user], newTokens);
+    Object.assign(tokens[user], {
+      createdAt: new Date().getTime(),
+      ...newTokens,
+    });
     store.save(unscopedTokens);
 
     refreshToken(user);
