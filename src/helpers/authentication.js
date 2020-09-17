@@ -85,7 +85,6 @@ module.exports = (application) => {
   };
 
   const refreshToken = (user) => {
-    if (user === 'default') return;
     if (isTest) return;
 
     clearTimeout(timeouts[user]);
@@ -93,22 +92,30 @@ module.exports = (application) => {
     const token = tokens[user];
     const createdAt = toMilliseconds(token.createdAt);
     const expiresIn = toMilliseconds(tokens[user].expiresIn);
-    const expiresAt = createdAt + expiresIn;
+    const expiresAt = createdAt + expiresIn - 600_000; // refresh 10 minutes before expected expiry
+
+    config.logger.debug(
+      `[API][${application}] Token will be refreshed at ${new Date(expiresAt)}.`
+    );
 
     timeouts[user] = setTimeout(async () => {
-      config.logger.debug(`[API][${application} Starting Refreshing Token`);
+      config.logger.debug(`[API][${application}] Starting Refreshing Token`);
 
-      const response = await fetchToken({
-        grantType: 'refresh_token',
-        refreshToken: tokens[user].refreshToken,
-      });
+      const response = await fetchToken(
+        user === 'default'
+          ? {}
+          : {
+              grantType: 'refresh_token',
+              refreshToken: tokens[user].refreshToken,
+            }
+      );
 
       update(user, response);
 
-      config.logger.debug(`[API][${application} Completed Refreshing Token`);
+      config.logger.debug(`[API][${application}] Completed Refreshing Token`);
 
       refreshToken(user);
-    }, expiresAt - Number(new Date()) - 600_000); // refresh 10 minutes before expected expiry
+    }, expiresAt - Number(new Date()));
   };
 
   function get(user = 'default') {
