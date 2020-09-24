@@ -4,15 +4,10 @@ const fetch = require('./fetch');
 const serializeFormData = require('./serializeFormData');
 const stringifyJSONParams = require('./stringifyJSONParams');
 const config = require('../config');
-const store = require('../store')('tokens');
 const { APIError } = require('../errors');
 
-const isTest = process.env.NODE_ENV === 'test';
 const authentications = {};
-const timeouts = {};
 const unscopedTokens = {};
-
-if (!isTest) Object.assign(unscopedTokens, store.load());
 
 const authenticateWith = (token) => ({
   requestInterceptor: (request) => {
@@ -51,14 +46,20 @@ const toMilliseconds = (timestamp) => {
   return Number(new Date(timestamp)); // timestamp as milliseconds
 };
 
+const isExpired = (token) => {
+  const createdAt = toMilliseconds(token.createdAt);
+  const expiresIn = toMilliseconds(token.expiresIn);
+  const expiresAt = createdAt + expiresIn - 600_000; // refresh 10 minutes before expected expiry
+
+  return expiresAt < toMilliseconds(new Date());
+};
+
 module.exports = (application) => {
   if (authentications[application]) return authentications[application];
 
   // eslint-disable-next-line no-multi-assign
   const tokens = (unscopedTokens[application] =
     unscopedTokens[application] || {});
-
-  const authenticateAsUser = (user) => authenticateWith(get(user));
 
   const fetchToken = async (body, options) => {
     const { authentication } = config[application];
@@ -81,60 +82,52 @@ module.exports = (application) => {
       );
     }
 
-    return camelCaseKeys(response.body, { deep: true });
+    const token = camelCaseKeys(response.body, { deep: true });
+
+    return { createdAt: new Date().getTime(), ...token };
   };
 
-  const refreshToken = (user) => {
-    if (user === 'default') return;
-    if (isTest) return;
+  const refreshToken = async (user) => {
+    config.logger.debug(`[API][${application}] Starting Refreshing Token`);
 
-    clearTimeout(timeouts[user]);
+    tokens[user] = fetchToken(
+      user === 'default'
+        ? {}
+        : {
+            grantType: 'refresh_token',
+            refreshToken: (await tokens[user]).refreshToken,
+          }
+    ).then((token) => {
+      config.logger.debug(`[API][${application}] Completed Refreshing Token`);
 
-    const token = tokens[user];
-    const createdAt = toMilliseconds(token.createdAt);
-    const expiresIn = toMilliseconds(tokens[user].expiresIn);
-    const expiresAt = createdAt + expiresIn;
-
-    timeouts[user] = setTimeout(async () => {
-      config.logger.debug(`[API][${application} Starting Refreshing Token`);
-
-      const response = await fetchToken({
-        grantType: 'refresh_token',
-        refreshToken: tokens[user].refreshToken,
+      return Object.assign(token, {
+        createdAt: new Date().getTime(),
       });
+    });
 
-      update(user, response);
-
-      config.logger.debug(`[API][${application} Completed Refreshing Token`);
-
-      refreshToken(user);
-    }, expiresAt - Number(new Date()) - 600_000); // refresh 10 minutes before expected expiry
+    return tokens[user];
   };
 
-  function get(user = 'default') {
-    return _.get(tokens, [user, 'accessToken']);
-  }
+  const get = async (user = 'default') => {
+    let token = await tokens[user];
 
-  function update(user, newTokens) {
-    tokens[user] = tokens[user] || {};
+    if (token && isExpired(token)) token = await refreshToken(user);
 
-    Object.assign(tokens[user], {
-      createdAt: new Date().getTime(),
-      ...newTokens,
-    });
-    store.save(unscopedTokens);
+    return token && token.accessToken;
+  };
 
-    refreshToken(user);
-  }
+  const store = (user, newTokens) => {
+    tokens[user] = Promise.resolve(newTokens);
+  };
 
-  _.forEach(_.keys(tokens), refreshToken);
+  const authenticateAsUser = async (user) => authenticateWith(await get(user));
 
   authentications[application] = {
     authenticateWith,
     authenticateAsUser,
     fetchToken,
     get,
-    update,
+    store,
   };
 
   return authentications[application];
