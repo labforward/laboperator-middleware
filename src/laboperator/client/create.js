@@ -12,7 +12,7 @@ const initialize = async () => {
         const seconds = Math.pow(2, attempt + 1);
 
         config.logger.debug(
-          `[API][Attempt#${
+          `[API][laboperator][Attempt#${
             attempt + 1
           }] Failed to connect to Laboperator API! Retrying in ${seconds} seconds`
         );
@@ -21,17 +21,17 @@ const initialize = async () => {
     }
   );
 
-  authentication.update('default', response);
+  authentication.store('default', response);
 };
 
 module.exports = async () => {
-  config.logger.debug('[API] Initializing Laboperator API Client');
+  config.logger.debug('[API][laboperator] Initializing API Client');
 
   await initialize();
 
   const client = await new SwaggerClient({
     url: `${config.laboperator.url.href}/documentation.json`,
-    ...authentication.authenticateAsUser(),
+    ...(await authentication.authenticateAsUser()),
   });
 
   if (client.errors.length) {
@@ -40,7 +40,7 @@ module.exports = async () => {
 
   client.authentication = authentication;
 
-  config.logger.debug('[API] Laboperator API Client Initialized');
+  config.logger.debug('[API][laboperator] API Client Initialized');
 
   return client;
 };

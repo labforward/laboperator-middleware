@@ -29,7 +29,7 @@ describe('Built-in Routes', () => {
         await server().get('/auth/callback?code=valid-code');
         const client = await require('./laboperator').client;
 
-        expect(client.authentication.get('1')).to.eql(
+        expect(await client.authentication.get('1')).to.eql(
           'laboperator-access-token'
         );
       });

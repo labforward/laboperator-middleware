@@ -14,5 +14,5 @@ module.exports = async (query = {}) => {
   });
   const tokenInfo = await getTokenInfo(token.accessToken);
 
-  authentication.update(tokenInfo.resourceOwnerId, token);
+  authentication.store(tokenInfo.resourceOwnerId, token);
 };
