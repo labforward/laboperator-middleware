@@ -116,8 +116,8 @@ module.exports = (application) => {
     return token && token.accessToken;
   };
 
-  const store = (user, newTokens) => {
-    tokens[user] = Promise.resolve(newTokens);
+  const store = (user, newToken) => {
+    tokens[user] = Promise.resolve(newToken);
   };
 
   const authenticateAsUser = async (user) => authenticateWith(await get(user));
