@@ -3,7 +3,7 @@ const config = require('../../config');
 const authentication = require('./authentication');
 const { APIError } = require('../../errors');
 
-const initialize = async () => {
+const fetchDefaultToken = async () => {
   const response = await authentication.fetchToken(
     {},
     {
@@ -27,17 +27,17 @@ const initialize = async () => {
 module.exports = async () => {
   config.logger.debug('[API][laboperator] Initializing API Client');
 
-  await initialize();
+  await fetchDefaultToken();
 
   const client = await new SwaggerClient({
-    url: `${config.laboperator.url.href}/documentation.json`,
-    ...(await authentication.authenticateAsUser()),
+    url: `${config.laboperator.url.origin}/api/v2/documentation.json`,
   });
 
   if (client.errors.length) {
     throw new APIError('laboperator', `Failed with ${client.errors}`);
   }
 
+  client.spec.servers[0].url = config.laboperator.url.path;
   client.authentication = authentication;
 
   config.logger.debug('[API][laboperator] API Client Initialized');
