@@ -1,5 +1,5 @@
 module.exports = {
-  authenticateUser: require('./authenticateUser'),
+  authorizeUser: require('./authorizeUser'),
   decodeToken: require('./decodeToken'),
   getAttributesFromResource: require('./getAttributesFromResource'),
   getAttributesFromResources: require('./getAttributesFromResources'),
