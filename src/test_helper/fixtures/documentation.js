@@ -1,6 +1,6 @@
 module.exports = [
   {
-    endpoint: '/documentation.json',
+    endpoint: '/api/v2/documentation.json',
     response: require('./documentation.json'),
   },
 ];

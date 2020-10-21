@@ -1,3 +1,4 @@
+/* eslint-disable mocha/no-exports */
 const fetchMock = require('fetch-mock');
 const _ = require('lodash');
 const config = require('../config');

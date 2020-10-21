@@ -10,7 +10,7 @@ module.exports = (app) => {
   app.get(
     '/auth/callback',
     helpers.propagateErrors(async (req, res) => {
-      await laboperator.apis.authenticateUser(req.query);
+      await laboperator.apis.authorizeUser(req.query);
 
       res.format({
         'application/json': () => {

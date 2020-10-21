@@ -4,18 +4,10 @@ const fetch = require('./fetch');
 const serializeFormData = require('./serializeFormData');
 const stringifyJSONParams = require('./stringifyJSONParams');
 const config = require('../config');
-const { APIError } = require('../errors');
+const { APIError, UnauthorizedError } = require('../errors');
 
 const authentications = {};
-const unscopedTokens = {};
-
-const authenticateWith = (token) => ({
-  requestInterceptor: (request) => {
-    request.headers.Authorization = `Bearer ${token}`;
-
-    return request;
-  },
-});
+const isTest = process.env.NODE_ENV === 'test';
 
 const headersFor = (serializer) => {
   switch (serializer) {
@@ -54,12 +46,61 @@ const isExpired = (token) => {
   return expiresAt < toMilliseconds(new Date());
 };
 
-module.exports = (application) => {
+const wrapInPromises = (object) =>
+  _.mapValues(object, (value) => Promise.resolve(value));
+
+const unwrapPromises = async (object) => {
+  const unwrapped = {};
+
+  await Promise.all(
+    _.map(object, async (value, key) => {
+      unwrapped[key] = await value;
+    })
+  );
+
+  return unwrapped;
+};
+
+const fixturesFor = (application) => {
+  switch (application) {
+    case 'laboperator':
+      return {
+        1: {
+          createdAt: Number(new Date()),
+          accessToken: 'laboperator-access-token',
+          tokenType: 'Bearer',
+          expiresIn: 3600,
+          refreshToken: 'laboperator-refresh-token',
+          scope: 'read',
+        },
+      };
+    default:
+      return {};
+  }
+};
+
+module.exports = (application, { persisted = false } = {}) => {
   if (authentications[application]) return authentications[application];
 
-  // eslint-disable-next-line no-multi-assign
-  const tokens = (unscopedTokens[application] =
-    unscopedTokens[application] || {});
+  const loadTokens = () => {
+    if (persisted) {
+      const storage = require('../storage')(`tokens-${application}`);
+      const tokens = wrapInPromises(
+        isTest ? fixturesFor(application) : storage.load()
+      );
+
+      tokens.save = () => unwrapPromises(tokens).then(storage.save);
+
+      return tokens;
+    } else {
+      const tokens = {};
+
+      tokens.save = _.noop;
+
+      return tokens;
+    }
+  };
+  const tokens = loadTokens();
 
   const fetchToken = async (body, options) => {
     const { authentication } = config[application];
@@ -100,9 +141,7 @@ module.exports = (application) => {
     ).then((token) => {
       config.logger.debug(`[API][${application}] Completed Refreshing Token`);
 
-      return Object.assign(token, {
-        createdAt: new Date().getTime(),
-      });
+      return token;
     });
 
     return tokens[user];
@@ -116,18 +155,29 @@ module.exports = (application) => {
     return token && token.accessToken;
   };
 
-  const store = (user, newToken) => {
-    tokens[user] = Promise.resolve(newToken);
-  };
+  const authenticateWith = (token) => {
+    if (!token) {
+      throw new UnauthorizedError(application, 'Missing valid accessToken');
+    }
 
-  const authenticateAsUser = async (user) => authenticateWith(await get(user));
+    return {
+      requestInterceptor: (request) => {
+        request.headers.Authorization = `Bearer ${token}`;
+
+        return request;
+      },
+    };
+  };
 
   authentications[application] = {
     authenticateWith,
-    authenticateAsUser,
+    authenticateAsUser: async (user) => authenticateWith(await get(user)),
     fetchToken,
     get,
-    store,
+    store: (user, newToken) => {
+      tokens[user] = Promise.resolve(newToken);
+      tokens.save();
+    },
   };
 
   return authentications[application];
