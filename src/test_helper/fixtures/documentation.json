@@ -46688,12 +46688,28 @@
         "summary": "Get Workflow Fields",
         "parameters": [
           {
+            "name": "filter",
+            "description": "Resources and/or attributes to filter by.",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/WorkflowFieldsFilter"
+            }
+          },
+          {
             "name": "fields",
             "in": "query",
             "schema": {
               "type": "object"
             },
             "description": "List of WorkflowField attributes to be included in the response."
+          },
+          {
+            "name": "deleted",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            },
+            "description": "Include archived workflow fields."
           },
           {
             "name": "include",
@@ -46721,14 +46737,6 @@
               "type": "object"
             },
             "description": "Sorting"
-          },
-          {
-            "name": "filter",
-            "description": "Resources and/or attributes to filter by.",
-            "in": "query",
-            "schema": {
-              "$ref": "#/components/schemas/WorkflowFieldsFilter"
-            }
           }
         ],
         "security": [
