@@ -147,10 +147,18 @@ module.exports = (application, { persisted = false } = {}) => {
     return tokens[user];
   };
 
+  const store = (user, token) => {
+    tokens[user] = Promise.resolve(token);
+    tokens.save();
+  };
+
   const get = async (user = 'default') => {
     let token = await tokens[user];
 
-    if (token && isExpired(token)) token = await refreshToken(user);
+    if (token && isExpired(token)) {
+      token = await refreshToken(user);
+      store(user, token);
+    }
 
     return token && token.accessToken;
   };
@@ -174,10 +182,7 @@ module.exports = (application, { persisted = false } = {}) => {
     authenticateAsUser: async (user) => authenticateWith(await get(user)),
     fetchToken,
     get,
-    store: (user, newToken) => {
-      tokens[user] = Promise.resolve(newToken);
-      tokens.save();
-    },
+    store,
   };
 
   return authentications[application];
