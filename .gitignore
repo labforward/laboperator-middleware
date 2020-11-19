@@ -1,4 +1,6 @@
 build
+dist
 log
 node_modules
 storage/tokens-*
+yarn-error.log
