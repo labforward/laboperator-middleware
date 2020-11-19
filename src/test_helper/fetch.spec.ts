@@ -1,11 +1,15 @@
 /* eslint-disable mocha/no-exports */
-const fetchMock = require('fetch-mock');
-const _ = require('lodash');
-const config = require('../config');
+import _ from 'lodash';
+import fetchMock, { MockMatcherFunction, MockRequest } from 'fetch-mock';
+
+import config from '~/config';
+
+import fixtures from './fixtures';
 
 const mocks = {};
 
-const addFixtures = (provider, fixtures) => {
+// eslint-disable-next-line import/prefer-default-export
+export const addFixtures = (provider, fixtures) => {
   mocks[provider] = [...(mocks[provider] || []), ...fixtures];
 };
 
@@ -44,9 +48,5 @@ const getResponse = (url, options) =>
 beforeEach(() => fetchMock.mock(matcher, getResponse));
 afterEach(() => fetchMock.restore());
 
-addFixtures(config.laboperator.url.href, require('./fixtures'));
-addFixtures(config.laboperator.url.origin, require('./fixtures'));
-
-module.exports = {
-  addFixtures,
-};
+addFixtures(config.laboperator.url.href, fixtures);
+addFixtures(config.laboperator.url.origin, fixtures);

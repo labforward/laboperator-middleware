@@ -1,11 +1,13 @@
-const _ = require('lodash');
-const getTokenInfo = require('./getTokenInfo');
-const { AuthorizationDeniedError } = require('../../errors');
+import _ from 'lodash';
 
-module.exports = async (query = {}) => {
+import { AuthorizationDeniedError } from '~/errors';
+
+import getTokenInfo from './getTokenInfo';
+
+export default async (query = {}) => {
   if (!query.code) throw new AuthorizationDeniedError('laboperator', query);
 
-  const client = await require('../client');
+  const client = await require('../client').default;
   const { authentication } = client;
 
   const token = await authentication.fetchToken({

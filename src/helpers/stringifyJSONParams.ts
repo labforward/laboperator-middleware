@@ -1,4 +1,4 @@
-const snakeCaseKeys = require('snakecase-keys');
+import snakeCaseKeys from 'snakecase-keys';
 
-module.exports = (params) =>
+export default (params) =>
   JSON.stringify(snakeCaseKeys(params, { deep: true }));

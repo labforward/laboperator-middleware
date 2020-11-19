@@ -1,5 +1,5 @@
-const camelCaseKeys = require('camelcase-keys');
-const _ = require('lodash');
+import _ from 'lodash';
+import camelCaseKeys from 'camelcase-keys';
 
 const getAttributesFromResource = (raw) => {
   const resource = raw.data || raw;
@@ -26,4 +26,4 @@ const getAttributesFromResource = (raw) => {
   };
 };
 
-module.exports = getAttributesFromResource;
+export default getAttributesFromResource;

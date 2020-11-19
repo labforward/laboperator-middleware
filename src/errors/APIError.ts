@@ -1,4 +1,4 @@
-const config = require('../config');
+import config from '~/config';
 
 class APIError extends Error {
   constructor(application, message) {
@@ -8,4 +8,4 @@ class APIError extends Error {
   }
 }
 
-module.exports = APIError;
+export default APIError;

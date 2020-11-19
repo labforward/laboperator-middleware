@@ -1,4 +1,2 @@
-module.exports = {
-  apis: require('./apis'),
-  client: require('./client'),
-};
+export * as apis from './apis';
+export { default as client } from './client';

@@ -1,6 +1,6 @@
-const getAttributesFromResource = require('./getAttributesFromResource');
+import getAttributesFromResource from './getAttributesFromResource';
 
-module.exports = (raw) => {
+export default (raw) => {
   const resources = raw.data || raw;
 
   return resources.map(getAttributesFromResource);

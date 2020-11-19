@@ -1,7 +1,7 @@
-const FormData = require('form-data');
-const _ = require('lodash');
+import _ from 'lodash';
+import FormData from 'form-data';
 
-module.exports = (params) => {
+export default (params) => {
   const formData = new FormData();
 
   _.each(params, (value, key) => {

@@ -1,4 +1,4 @@
-module.exports = [
+export default [
   {
     endpoint: '/oauth/token',
     method: 'post',

@@ -1,10 +1,12 @@
-const camelCaseKeys = require('camelcase-keys');
-const _ = require('lodash');
-const fetch = require('./fetch');
-const serializeFormData = require('./serializeFormData');
-const stringifyJSONParams = require('./stringifyJSONParams');
-const config = require('../config');
-const { APIError, UnauthorizedError } = require('../errors');
+import _ from 'lodash';
+import camelCaseKeys from 'camelcase-keys';
+
+import { APIError, UnauthorizedError } from '~/errors';
+import config from '~/config';
+
+import fetch from './fetch';
+import serializeFormData from './serializeFormData';
+import stringifyJSONParams from './stringifyJSONParams';
 
 const authentications = {};
 const isTest = process.env.NODE_ENV === 'test';
@@ -79,7 +81,7 @@ const fixturesFor = (application) => {
   }
 };
 
-module.exports = (application, { persisted = false } = {}) => {
+export default (application, { persisted = false } = {}) => {
   if (authentications[application]) return authentications[application];
 
   const loadTokens = () => {

@@ -1,3 +1,3 @@
-const create = require('./client/create');
+import create from './client/create';
 
-module.exports = create();
+export default create();

@@ -1,3 +1,3 @@
-const { authentication } = require('../../helpers');
+import { authentication } from '~/helpers';
 
-module.exports = authentication('laboperator', { persisted: true });
+export default authentication('laboperator', { persisted: true });

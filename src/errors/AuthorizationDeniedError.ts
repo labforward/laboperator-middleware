@@ -1,4 +1,4 @@
-const APIError = require('./APIError');
+import APIError from './APIError';
 
 class AuthorizationDeniedError extends APIError {
   constructor(application, query) {
@@ -9,4 +9,4 @@ class AuthorizationDeniedError extends APIError {
   }
 }
 
-module.exports = AuthorizationDeniedError;
+export default AuthorizationDeniedError;

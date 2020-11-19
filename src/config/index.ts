@@ -1,10 +1,12 @@
-/* eslint-disable no-param-reassign */
-const Ajv = require('ajv');
-const fs = require('fs');
-const path = require('path');
-const url = require('url');
-const yaml = require('yaml');
-const _ = require('lodash');
+import fs from 'fs';
+import path from 'path';
+import url from 'url';
+
+import _ from 'lodash';
+import Ajv from 'ajv';
+import yaml from 'yaml';
+
+import logger from './logger';
 
 let config;
 
@@ -26,6 +28,7 @@ const valid = validator(config);
 if (!valid) throw JSON.stringify(validator.errors);
 
 _.forEach(config, (provider) => {
+  /* eslint-disable no-param-reassign */
   provider.url = url.parse(provider.url);
   provider.url.origin = provider.url.href.replace(
     new RegExp(`${provider.url.path}$`),
@@ -33,6 +36,7 @@ _.forEach(config, (provider) => {
   );
 });
 
-config.logger = require('./logger');
+config.logger = logger;
 
-module.exports = config;
+export { logger };
+export default config;

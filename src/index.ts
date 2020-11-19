@@ -1,9 +1,12 @@
-const createError = require('http-errors');
-const express = require('express');
-const logger = require('morgan');
-const path = require('path');
-const config = require('./config');
-const helpers = require('./helpers');
+import path from 'path';
+
+import createError from 'http-errors';
+import express from 'express';
+import logger from 'morgan';
+
+import config from './config';
+import * as helpers from './helpers';
+import routes from './routes';
 
 const app = express();
 
@@ -11,10 +14,10 @@ app.use(logger('dev', { stream: config.logger.stream }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-require('./routes')(app);
+routes(app);
 
-if (path.resolve(__dirname) !== path.resolve('./src')) {
-  helpers.requireRelative('./src/routes')(app);
+if (path.resolve(__dirname) !== path.resolve('./dist')) {
+  helpers.requireRelative('./dist/routes')(app);
 }
 
 // default 404 routes
@@ -32,4 +35,4 @@ app.use((err, req, res, _next) => {
   res.json(helpers.jsonResponse(status, helpers.getErrorMessage(err)));
 });
 
-module.exports = app;
+export default app;

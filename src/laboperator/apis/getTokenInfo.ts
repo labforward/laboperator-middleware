@@ -1,8 +1,9 @@
-const camelCaseKeys = require('camelcase-keys');
-const config = require('../../config');
-const { fetch } = require('../../helpers');
+import camelCaseKeys from 'camelcase-keys';
 
-module.exports = async (token) => {
+import config from '~/config';
+import { fetch } from '~/helpers';
+
+export default async (token) => {
   const url = new URL(config.laboperator.authentication.tokenInfo.url);
 
   url.searchParams.append('access_token', token);

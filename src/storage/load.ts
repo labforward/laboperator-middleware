@@ -1,7 +1,8 @@
-const fs = require('fs');
-const config = require('../config');
+import fs from 'fs';
 
-module.exports = (path) => () => {
+import config from '~/config';
+
+export default (path) => () => {
   if (!fs.existsSync(path)) return undefined;
 
   let data;

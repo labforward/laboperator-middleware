@@ -1,1 +1,1 @@
-module.exports = (callback) => (...args) => callback(...args).catch(args[2]);
+export default (callback) => (...args) => callback(...args).catch(args[2]);

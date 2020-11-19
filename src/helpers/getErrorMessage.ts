@@ -1,4 +1,4 @@
-module.exports = (e) => {
+export default (e) => {
   let message;
 
   // rejected fetch request

@@ -1,9 +1,11 @@
-const _ = require('lodash');
-const fetch = require('swagger-client').http;
-const fetchRetry = require('fetch-retry')(fetch);
-const ProxyAgent = require('https-proxy-agent');
+import _ from 'lodash';
+import { http as fetch } from 'swagger-client';
+import fetchRetryFactory from 'fetch-retry';
+import ProxyAgent from 'https-proxy-agent';
 
-module.exports = ({ proxy, ...rest }) => {
+const fetchRetry = fetchRetryFactory(fetch);
+
+export default ({ proxy, ...rest }) => {
   const fetchOptions = proxy ? { agent: new ProxyAgent(proxy), ...rest } : rest;
   const retryOptions = _.pick(rest, ['retries', 'retryDelay', 'retryOn']);
 

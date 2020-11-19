@@ -1,7 +1,9 @@
-const SwaggerClient = require('swagger-client');
-const config = require('../../config');
-const authentication = require('./authentication');
-const { APIError } = require('../../errors');
+import SwaggerClient from 'swagger-client';
+
+import { APIError } from '~/errors';
+import config from '~/config';
+
+import authentication from './authentication';
 
 const fetchDefaultToken = async () => {
   const response = await authentication.fetchToken(
@@ -24,7 +26,7 @@ const fetchDefaultToken = async () => {
   authentication.store('default', response);
 };
 
-module.exports = async () => {
+export default async () => {
   config.logger.debug('[API][laboperator] Initializing API Client');
 
   await fetchDefaultToken();

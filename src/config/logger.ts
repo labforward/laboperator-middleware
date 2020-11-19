@@ -1,4 +1,4 @@
-const winston = require('winston');
+import winston from 'winston';
 
 const logFormatter = winston.format.printf((info) => {
   const { timestamp, level, response, stack, message } = info;
@@ -42,4 +42,4 @@ logger.stream = {
   write: (message, _encoding) => logger.info(message),
 };
 
-module.exports = logger;
+export default logger;

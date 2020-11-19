@@ -1,7 +1,4 @@
-require('./chai.spec');
-const fetchHelpers = require('./fetch.spec');
+import './chai.spec';
 
-module.exports = {
-  ...fetchHelpers,
-  server: require('./server.spec'),
-};
+export * from './fetch.spec';
+export { default as server } from './server.spec';

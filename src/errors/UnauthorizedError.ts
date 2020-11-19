@@ -1,4 +1,4 @@
-const APIError = require('./APIError');
+import APIError from './APIError';
 
 class UnauthorizedError extends APIError {
   constructor(application, message) {
@@ -8,4 +8,4 @@ class UnauthorizedError extends APIError {
   }
 }
 
-module.exports = UnauthorizedError;
+export default UnauthorizedError;

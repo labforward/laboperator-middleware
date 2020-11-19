@@ -1,6 +1,6 @@
-const helpers = require('../helpers');
+import * as helpers from '~/helpers';
 
-module.exports = (app) => {
+export default (app) => {
   const laboperator = require('../laboperator');
 
   app.get('/', (req, res) => {

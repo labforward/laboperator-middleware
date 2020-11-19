@@ -1,7 +1,8 @@
-const fs = require('fs');
-const config = require('../config');
+import fs from 'fs';
 
-module.exports = (path) => (data) => {
+import config from '~/config';
+
+export default (path) => (data) => {
   try {
     config.logger.debug(`[STORE] Started saving into ${path}`);
 

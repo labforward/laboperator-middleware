@@ -1,1 +1,1 @@
-module.exports = () => request(require('..'));
+export default () => global.request(require('..'));

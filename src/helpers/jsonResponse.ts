@@ -1,6 +1,6 @@
-const HttpStatus = require('http-status-codes');
+import HttpStatus from 'http-status-codes';
 
-module.exports = (code, details = HttpStatus.getStatusText(code)) => ({
+export default (code, details = HttpStatus.getStatusText(code)) => ({
   status: HttpStatus.getStatusText(code),
   code,
   details,

@@ -15,7 +15,7 @@ const authentication1 = {
   },
 };
 
-module.exports = [
+export default [
   {
     endpoint: '/authentications',
     response: {

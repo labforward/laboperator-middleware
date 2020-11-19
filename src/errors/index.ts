@@ -1,6 +1,4 @@
-module.exports = {
-  APIError: require('./APIError'),
-  AuthorizationDeniedError: require('./AuthorizationDeniedError'),
-  BadRequestError: require('./BadRequestError'),
-  UnauthorizedError: require('./UnauthorizedError'),
-};
+export { default as APIError } from './APIError';
+export { default as AuthorizationDeniedError } from './AuthorizationDeniedError';
+export { default as BadRequestError } from './BadRequestError';
+export { default as UnauthorizedError } from './UnauthorizedError';

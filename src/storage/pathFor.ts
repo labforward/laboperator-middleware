@@ -1,7 +1,7 @@
-const fs = require('fs');
-const path = require('path');
+import fs from 'fs';
+import path from 'path';
 
-module.exports = (key) => {
+export default (key) => {
   if (!fs.existsSync('./storage')) fs.mkdirSync('./storage');
 
   return path.resolve(`./storage/${key}.json`);

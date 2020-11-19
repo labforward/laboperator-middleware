@@ -1,8 +1,9 @@
-const { rejects } = require('assert');
+import { rejects } from 'assert';
+
+import decodeToken from './decodeToken';
 
 describe('decodeToken', () => {
   it('return a promise resolving to the accessToken', async () => {
-    const decodeToken = require('./decodeToken');
     const authentication = await decodeToken('encoded-id');
 
     expect(authentication).to.containSubset({
@@ -12,8 +13,6 @@ describe('decodeToken', () => {
   });
 
   it('reject invalid token', async () => {
-    const decodeToken = require('./decodeToken');
-
     await rejects(decodeToken('invalid-id'), { status: 401 });
   });
 });

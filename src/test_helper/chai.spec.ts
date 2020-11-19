@@ -1,9 +1,13 @@
-const chai = require('chai');
+import chai from 'chai';
+import chaiHttp from 'chai-http';
+import chaiSubset from 'chai-subset';
+import dirtyChai from 'dirty-chai';
+import sinonChai from 'sinon-chai';
 
-chai.use(require('chai-http'));
-chai.use(require('chai-subset'));
-chai.use(require('dirty-chai'));
-chai.use(require('sinon-chai'));
+chai.use(chaiHttp);
+chai.use(chaiSubset);
+chai.use(dirtyChai);
+chai.use(sinonChai);
 
 global.expect = chai.expect;
 global.chai = chai;
