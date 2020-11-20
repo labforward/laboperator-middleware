@@ -1,21 +1,43 @@
 /* eslint-disable mocha/no-exports */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import _ from 'lodash';
 import fetchMock, { MockMatcherFunction, MockRequest } from 'fetch-mock';
 
 import config from '~/config';
 
-import fixtures from './fixtures';
+import defaultFixtures from './fixtures';
 
-const mocks = {};
+type MockResponseBody = any;
+
+interface Fixture {
+  endpoint: string;
+  method?: string;
+  request?: any;
+  response:
+    | MockResponseBody
+    | {
+        status: number;
+        headers: Record<string, string>;
+        body: MockResponseBody;
+      };
+}
+
+const mocks: Record<string, Array<Fixture>> = {};
 
 // eslint-disable-next-line import/prefer-default-export
-export const addFixtures = (provider, fixtures) => {
+export const addFixtures = (
+  provider: string,
+  fixtures: Array<Fixture>
+): void => {
   mocks[provider] = [...(mocks[provider] || []), ...fixtures];
 };
 
 const headers = { 'Content-Type': 'application/json' };
-const normalize = (object, key) => {
-  const raw = (object || {})[key] || {};
+const normalize = (
+  object: Fixture,
+  key: 'response' | 'request'
+): Fixture[typeof key] => {
+  const raw: Fixture[typeof key] = (object || ({} as Fixture))[key || ''] || {};
 
   if (raw.status) {
     return raw.body ? { ...raw, headers } : raw;
@@ -24,29 +46,34 @@ const normalize = (object, key) => {
   return { headers, body: raw };
 };
 
-const getProvider = (url) =>
-  _.findKey(mocks, (provider, key) => url.startsWith(key));
+const getProvider = (url: string) =>
+  _.findKey(mocks, (_provider, key) => url.startsWith(key));
 
-const getMock = (url, { body, method }) => {
+const getMock = (url: string, { body, method }: MockRequest) => {
   const provider = getProvider(url);
-  const endpoint = url.replace(provider, '');
+  const endpoint = provider && url.replace(provider, '');
 
-  return (mocks[provider] || []).find(
-    (mock) =>
-      mock.endpoint === endpoint &&
-      _.lowerCase(mock.method || 'get') === _.lowerCase(method || 'get') &&
-      _.isMatch(
-        _.isString(body) ? JSON.parse(body) : body,
-        normalize(mock, 'request').body
+  return provider
+    ? (mocks[provider] || []).find(
+        (mock) =>
+          mock.endpoint === endpoint &&
+          _.lowerCase(mock.method || 'get') === _.lowerCase(method || 'get') &&
+          _.isMatch(
+            _.isString(body) ? JSON.parse(body) : body,
+            normalize(mock, 'request').body
+          )
       )
-  );
+    : undefined;
 };
-const matcher = (url, options) => !!getMock(url, options);
-const getResponse = (url, options) =>
-  normalize(getMock(url, options), 'response');
+const matcher: MockMatcherFunction = (url, options) => !!getMock(url, options);
+const getResponse = (url: string, options: MockRequest) => {
+  const mock = getMock(url, options);
+
+  return mock && normalize(mock, 'response');
+};
 
 beforeEach(() => fetchMock.mock(matcher, getResponse));
 afterEach(() => fetchMock.restore());
 
-addFixtures(config.laboperator.url.href, fixtures);
-addFixtures(config.laboperator.url.origin, fixtures);
+addFixtures(config.providers.laboperator.url.href, defaultFixtures);
+addFixtures(config.providers.laboperator.url.origin, defaultFixtures);

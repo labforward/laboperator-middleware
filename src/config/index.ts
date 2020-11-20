@@ -1,19 +1,45 @@
 import fs from 'fs';
 import path from 'path';
-import url from 'url';
+import url, { Url } from 'url';
 
 import _ from 'lodash';
 import Ajv from 'ajv';
 import yaml from 'yaml';
 
-import logger from './logger';
+import logger, { Logger } from './logger';
 
-let config;
+interface UrlWithOrigin extends Url {
+  origin: string;
+}
+
+interface Config {
+  providers: {
+    [provider: string]: {
+      url: UrlWithOrigin;
+      authentication: {
+        token: {
+          url: string;
+          options: Record<string, string>;
+          serializer: string;
+        };
+        tokenInfo: {
+          url: string;
+        };
+      };
+    };
+  };
+  logger: Logger;
+}
+
+const config: Config = { providers: {}, logger };
 
 try {
-  config = yaml.parse(fs.readFileSync('./config.yml', { encoding: 'utf8' }));
+  _.merge(
+    config.providers,
+    yaml.parse(fs.readFileSync('./config.yml', { encoding: 'utf8' }))
+  );
 } catch {
-  config = {};
+  // do nothing
 }
 
 const ajv = new Ajv({ useDefaults: true });
@@ -23,20 +49,20 @@ const schema = yaml.parse(
   })
 );
 const validator = ajv.compile(schema);
-const valid = validator(config);
+const valid = validator(config.providers);
 
 if (!valid) throw JSON.stringify(validator.errors);
 
-_.forEach(config, (provider) => {
+_.forEach(config.providers, (provider) => {
   /* eslint-disable no-param-reassign */
-  provider.url = url.parse(provider.url);
+  provider.url = (url.parse(
+    (provider.url as unknown) as string
+  ) as unknown) as UrlWithOrigin;
   provider.url.origin = provider.url.href.replace(
     new RegExp(`${provider.url.path}$`),
     ''
   );
 });
-
-config.logger = logger;
 
 export { logger };
 export default config;

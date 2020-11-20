@@ -1,1 +1,1 @@
-export default () => global.request(require('..'));
+export default (): ChaiHttp.Agent => global.request(require('..').default);

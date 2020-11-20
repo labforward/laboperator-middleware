@@ -4,14 +4,44 @@ import camelCaseKeys from 'camelcase-keys';
 import { APIError, UnauthorizedError } from '~/errors';
 import config from '~/config';
 
-import fetch from './fetch';
+import fetch, { FetchOptions, RetryOptions } from './fetch';
 import serializeFormData from './serializeFormData';
 import stringifyJSONParams from './stringifyJSONParams';
 
-const authentications = {};
+export interface AuthenticationHeaders {
+  requestInterceptor: (options: FetchOptions) => FetchOptions;
+}
+export interface Authentication {
+  authenticateWith: (token: string) => AuthenticationHeaders;
+  authenticateAsUser: (user: string) => Promise<AuthenticationHeaders>;
+  fetchToken: (
+    body: Record<string, string>,
+    options?: FetchOptions & RetryOptions
+  ) => Promise<Token>;
+  get: (user: string) => Promise<string>;
+  store: (user: string, token: Token) => void;
+}
+
+interface TokenWithOptionalCreatedAt {
+  accessToken: string;
+  refreshToken: string;
+  createdAt?: string | number;
+  expiresIn: string | number;
+}
+
+interface Token extends TokenWithOptionalCreatedAt {
+  createdAt: string | number;
+}
+
+interface Tokens {
+  cache: Record<string, Promise<Token>>;
+  save: () => void;
+}
+
+const authentications: Record<string, Authentication> = {};
 const isTest = process.env.NODE_ENV === 'test';
 
-const headersFor = (serializer) => {
+const headersFor = (serializer: string) => {
   switch (serializer) {
     case 'multipart/form-data':
       return {};
@@ -23,7 +53,7 @@ const headersFor = (serializer) => {
   }
 };
 
-const serializerFor = (serializer) => {
+const serializerFor = (serializer: string) => {
   switch (serializer) {
     case 'multipart/form-data':
       return serializeFormData;
@@ -32,7 +62,7 @@ const serializerFor = (serializer) => {
   }
 };
 
-const toMilliseconds = (timestamp) => {
+const toMilliseconds = (timestamp: string | number) => {
   if (_.isString(timestamp)) return Number(new Date(timestamp)); // ISO8601 string
 
   if (timestamp < 1577836800000) return Number(new Date(timestamp * 1000)); // timestamp as seconds
@@ -40,19 +70,19 @@ const toMilliseconds = (timestamp) => {
   return Number(new Date(timestamp)); // timestamp as milliseconds
 };
 
-const isExpired = (token) => {
+const isExpired = (token: Token) => {
   const createdAt = toMilliseconds(token.createdAt);
   const expiresIn = toMilliseconds(token.expiresIn);
   const expiresAt = createdAt + expiresIn - 600_000; // refresh 10 minutes before expected expiry
 
-  return expiresAt < toMilliseconds(new Date());
+  return expiresAt < Number(new Date());
 };
 
-const wrapInPromises = (object) =>
+const wrapInPromises = (object: Record<string, Token>) =>
   _.mapValues(object, (value) => Promise.resolve(value));
 
-const unwrapPromises = async (object) => {
-  const unwrapped = {};
+const unwrapPromises = async (object: Record<string, Promise<Token>>) => {
+  const unwrapped: Record<string, Token> = {};
 
   await Promise.all(
     _.map(object, async (value, key) => {
@@ -63,7 +93,7 @@ const unwrapPromises = async (object) => {
   return unwrapped;
 };
 
-const fixturesFor = (application) => {
+const fixturesFor = (application: string) => {
   switch (application) {
     case 'laboperator':
       return {
@@ -81,31 +111,39 @@ const fixturesFor = (application) => {
   }
 };
 
-export default (application, { persisted = false } = {}) => {
+export default (
+  application: string,
+  { persisted = false } = {}
+): Authentication => {
   if (authentications[application]) return authentications[application];
 
   const loadTokens = () => {
     if (persisted) {
-      const storage = require('../storage')(`tokens-${application}`);
-      const tokens = wrapInPromises(
-        isTest ? fixturesFor(application) : storage.load()
-      );
-
-      tokens.save = () => unwrapPromises(tokens).then(storage.save);
+      const storage = require('../storage').default(`tokens-${application}`);
+      const tokens = {
+        cache: wrapInPromises(
+          isTest ? fixturesFor(application) : storage.load()
+        ),
+        save: () => {
+          unwrapPromises(tokens.cache).then(storage.save);
+        },
+      };
 
       return tokens;
     } else {
-      const tokens = {};
-
-      tokens.save = _.noop;
-
-      return tokens;
+      return {
+        cache: {},
+        save: _.noop,
+      };
     }
   };
-  const tokens = loadTokens();
+  const tokens: Tokens = loadTokens();
 
-  const fetchToken = async (body, options) => {
-    const { authentication } = config[application];
+  const fetchToken = async (
+    body: Record<string, string>,
+    options?: FetchOptions & RetryOptions
+  ): Promise<Token> => {
+    const { authentication } = config.providers[application];
     const { options: tokenOptions, serializer, ...rest } = authentication.token;
     const response = await fetch({
       ...rest,
@@ -125,20 +163,26 @@ export default (application, { persisted = false } = {}) => {
       );
     }
 
-    const token = camelCaseKeys(response.body, { deep: true });
+    const token = camelCaseKeys(
+      response.body as Parameters<typeof camelCaseKeys>[0],
+      { deep: true }
+    );
 
-    return { createdAt: new Date().getTime(), ...token };
+    return {
+      createdAt: new Date().getTime(),
+      ...(token as TokenWithOptionalCreatedAt),
+    };
   };
 
-  const refreshToken = async (user) => {
+  const refreshToken = async (user: string) => {
     config.logger.debug(`[API][${application}] Starting Refreshing Token`);
 
-    tokens[user] = fetchToken(
+    tokens.cache[user] = fetchToken(
       user === 'default'
         ? {}
         : {
             grantType: 'refresh_token',
-            refreshToken: (await tokens[user]).refreshToken,
+            refreshToken: (await tokens.cache[user]).refreshToken,
           }
     ).then((token) => {
       config.logger.debug(`[API][${application}] Completed Refreshing Token`);
@@ -146,16 +190,16 @@ export default (application, { persisted = false } = {}) => {
       return token;
     });
 
-    return tokens[user];
+    return tokens.cache[user];
   };
 
-  const store = (user, token) => {
-    tokens[user] = Promise.resolve(token);
+  const store = (user: string, token: Token): void => {
+    tokens.cache[user] = Promise.resolve(token);
     tokens.save();
   };
 
   const get = async (user = 'default') => {
-    let token = await tokens[user];
+    let token = await tokens.cache[user];
 
     if (token && isExpired(token)) {
       token = await refreshToken(user);
@@ -165,13 +209,14 @@ export default (application, { persisted = false } = {}) => {
     return token && token.accessToken;
   };
 
-  const authenticateWith = (token) => {
+  const authenticateWith = (token: string) => {
     if (!token) {
       throw new UnauthorizedError(application, 'Missing valid accessToken');
     }
 
     return {
-      requestInterceptor: (request) => {
+      requestInterceptor: (request: FetchOptions) => {
+        request.headers = request.headers || {};
         request.headers.Authorization = `Bearer ${token}`;
 
         return request;
@@ -181,7 +226,8 @@ export default (application, { persisted = false } = {}) => {
 
   authentications[application] = {
     authenticateWith,
-    authenticateAsUser: async (user) => authenticateWith(await get(user)),
+    authenticateAsUser: async (user: string): Promise<AuthenticationHeaders> =>
+      authenticateWith(await get(user)),
     fetchToken,
     get,
     store,

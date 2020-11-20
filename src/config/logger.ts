@@ -1,5 +1,7 @@
 import winston from 'winston';
 
+export { Logger } from 'winston';
+
 const logFormatter = winston.format.printf((info) => {
   const { timestamp, level, response, stack, message } = info;
 
@@ -37,9 +39,5 @@ const logger = winston.createLogger({
         }),
   ],
 });
-
-logger.stream = {
-  write: (message, _encoding) => logger.info(message),
-};
 
 export default logger;

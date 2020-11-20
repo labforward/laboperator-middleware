@@ -1,13 +1,15 @@
 import _ from 'lodash';
 import camelCaseKeys from 'camelcase-keys';
 
-const getAttributesFromResource = (raw) => {
-  const resource = raw.data || raw;
+const getAttributesFromResource = (
+  raw: ResourceData | Resource
+): Attributes => {
+  const resource = (raw as ResourceData).data || (raw as Resource);
   const relationships = _.reduce(
     resource.relationships,
     (prev, value, key) => {
-      const relationKey = Array.isArray(value) ? `${key}Ids` : `${key}Id`;
-      const relationValue = Array.isArray(value)
+      const relationKey = Array.isArray(value.data) ? `${key}Ids` : `${key}Id`;
+      const relationValue = Array.isArray(value.data)
         ? value.data.map((relation) => relation.id)
         : value.data.id;
 
@@ -20,7 +22,8 @@ const getAttributesFromResource = (raw) => {
   );
 
   return {
-    ..._.pick(resource, ['id', 'type']),
+    id: resource.id,
+    type: resource.type,
     ...camelCaseKeys(resource.attributes, { deep: true }),
     ...relationships,
   };

@@ -2,7 +2,12 @@ import load from './load';
 import pathFor from './pathFor';
 import save from './save';
 
-export default (key) => {
+interface Storage {
+  load: ReturnType<typeof load>;
+  save: ReturnType<typeof save>;
+}
+
+export default (key: string): Storage => {
   const path = pathFor(key);
 
   return {

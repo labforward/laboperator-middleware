@@ -2,7 +2,9 @@ import fs from 'fs';
 
 import config from '~/config';
 
-export default (path) => (data) => {
+export default (path: string) => (
+  data: Parameters<JSON['stringify']>[0]
+): void => {
   try {
     config.logger.debug(`[STORE] Started saving into ${path}`);
 

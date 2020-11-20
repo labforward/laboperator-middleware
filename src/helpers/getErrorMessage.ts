@@ -1,14 +1,20 @@
-export default (e) => {
-  let message;
+import { FetchErrorResponse } from 'swagger-client';
 
-  // rejected fetch request
-  if (e.response) {
-    const { body = {} } = e.response;
-    const { errors: [error] = [] } = body;
+const getErrorMessageFromFetchError = (
+  e: FetchErrorResponse
+): string | undefined => {
+  if (!e.response) return undefined;
 
-    message = (error && error.detail) || body.error_description;
-  }
+  const { body } = e.response;
+  const { errors: [error] = [] } = body || {};
 
-  // Error object
-  return message || e.message;
+  return (error && error.detail) || (body && body.error_description);
+};
+const getErrorMessageFromError = (e: Error) => e.message;
+
+export default (e: Error | FetchErrorResponse): string => {
+  return (
+    getErrorMessageFromFetchError(e as FetchErrorResponse) ||
+    getErrorMessageFromError(e as Error)
+  );
 };

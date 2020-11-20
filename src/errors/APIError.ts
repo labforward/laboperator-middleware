@@ -1,7 +1,7 @@
 import config from '~/config';
 
 class APIError extends Error {
-  constructor(application, message) {
+  constructor(application: string, message?: string) {
     config.logger.error(`[API][${application}] Error: ${message}`);
 
     super(message);
