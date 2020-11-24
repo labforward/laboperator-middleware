@@ -50,6 +50,17 @@ jobs:
       - store_test_results:
           path: /tmp/reports
 
+  ensure_compile:
+    <<: *docker_test_stack
+    steps:
+      - checkout
+      - *load_cache
+      - run: yarn install --frozen-lockfile
+      - *save_cache
+      - run: yarn laboperator-middleware compile
+      - run: |
+          [[ -z $(git status -s) ]] || (echo "Don't forget to run 'yarn laboperator-middleware compile'" && exit 1)
+
 # --------
 #   WORKFLOWS
 # --------
@@ -59,3 +70,4 @@ workflows:
   tests:
     jobs:
       - test_mocha
+      - ensure_compile

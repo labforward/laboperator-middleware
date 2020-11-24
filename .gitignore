@@ -1,5 +1,4 @@
 build
-dist
 log
 node_modules
 storage/tokens-*
