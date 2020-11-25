@@ -2,26 +2,20 @@
   "name": "laboperator-middleware",
   "version": "1.0.0",
   "description": "Provide common functionality for customized Laboperator middleware.",
-  "main": "src/index.js",
-  "exports": {
-    "./config": "./src/config/index.js",
-    "./errors": "./src/errors/index.js",
-    "./helpers": "./src/helpers/index.js",
-    "./laboperator": "./src/laboperator/index.js",
-    "./test_helper": "./src/test_helper/index.js"
-  },
   "repository": "git@github.com:labforward/laboperator-middleware.git",
-  "author": "ignatius.reza@labforward.io",
+  "author": "labforward GmbH",
   "license": "Apache-2.0",
   "private": true,
-  "bin": "./bin/cli",
-  "scripts": {
-    "test": "./bin/cli test -- --ignore \\\"src/templates/\\*\\*\\\" --watch-ignore \\\"src/templates/\\*\\*\\\""
+  "engines": {
+    "node": "^14.0.0"
   },
-  "importSort": {
-    ".js, .jsx, .ts, .tsx": {
-      "style": "labforward"
-    }
+  "exports": {
+    ".": "./dist/index.js",
+    "./config": "./dist/config/index.js",
+    "./errors": "./dist/errors/index.js",
+    "./helpers": "./dist/helpers/index.js",
+    "./laboperator": "./dist/laboperator/index.js",
+    "./test_helper": "./dist/test_helper/index.js"
   },
   "dependencies": {
     "ajv": "^6.12.6",
@@ -47,12 +41,14 @@
     "chai-http": "^4.3.0",
     "chai-subset": "^1.6.0",
     "dirty-chai": "^2.0.1",
-    "fetch-mock": "^9.10.7",
-    "labforward-config-base": "https://github.com/labforward/labforward-config-base",
-    "mocha": "^8.2.0",
-    "mocha-junit-reporter": "^2.0.0",
-    "mocha-multi-reporters": "^1.1.7",
-    "sinon": "^9.2.0",
+    "fetch-mock": "^9.11.0",
+    "laboperator-middleware-development": "https://github.com/labforward/laboperator-middleware-development",
+    "sinon": "^9.2.1",
     "sinon-chai": "^3.5.0"
+  },
+  "importSort": {
+    ".js, .jsx, .ts, .tsx": {
+      "style": "labforward"
+    }
   }
 }

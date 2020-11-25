@@ -1,0 +1,79 @@
+/* eslint-disable mocha/no-exports */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import _ from 'lodash';
+import fetchMock, { MockMatcherFunction, MockRequest } from 'fetch-mock';
+
+import config from '~/config';
+
+import defaultFixtures from './fixtures';
+
+type MockResponseBody = any;
+
+interface Fixture {
+  endpoint: string;
+  method?: string;
+  request?: any;
+  response:
+    | MockResponseBody
+    | {
+        status: number;
+        headers: Record<string, string>;
+        body: MockResponseBody;
+      };
+}
+
+const mocks: Record<string, Array<Fixture>> = {};
+
+// eslint-disable-next-line import/prefer-default-export
+export const addFixtures = (
+  provider: string,
+  fixtures: Array<Fixture>
+): void => {
+  mocks[provider] = [...(mocks[provider] || []), ...fixtures];
+};
+
+const headers = { 'Content-Type': 'application/json' };
+const normalize = (
+  object: Fixture,
+  key: 'response' | 'request'
+): Fixture[typeof key] => {
+  const raw: Fixture[typeof key] = (object || ({} as Fixture))[key || ''] || {};
+
+  if (raw.status) {
+    return raw.body ? { ...raw, headers } : raw;
+  }
+
+  return { headers, body: raw };
+};
+
+const getProvider = (url: string) =>
+  _.findKey(mocks, (_provider, key) => url.startsWith(key));
+
+const getMock = (url: string, { body, method }: MockRequest) => {
+  const provider = getProvider(url);
+  const endpoint = provider && url.replace(provider, '');
+
+  return provider
+    ? (mocks[provider] || []).find(
+        (mock) =>
+          mock.endpoint === endpoint &&
+          _.lowerCase(mock.method || 'get') === _.lowerCase(method || 'get') &&
+          _.isMatch(
+            _.isString(body) ? JSON.parse(body) : body,
+            normalize(mock, 'request').body
+          )
+      )
+    : undefined;
+};
+const matcher: MockMatcherFunction = (url, options) => !!getMock(url, options);
+const getResponse = (url: string, options: MockRequest) => {
+  const mock = getMock(url, options);
+
+  return mock && normalize(mock, 'response');
+};
+
+beforeEach(() => fetchMock.mock(matcher, getResponse));
+afterEach(() => fetchMock.restore());
+
+addFixtures(config.providers.laboperator.url.href, defaultFixtures);
+addFixtures(config.providers.laboperator.url.origin, defaultFixtures);

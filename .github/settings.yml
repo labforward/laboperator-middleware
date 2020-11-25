@@ -1,0 +1,4 @@
+_extends: repo-settings
+
+repository:
+  private: false
