@@ -17,6 +17,12 @@
     "./laboperator": "./dist/laboperator/index.js",
     "./test_helper": "./dist/test_helper/index.js"
   },
+  "scripts": {
+    "clean": "laboperator-middleware clean",
+    "compile": "laboperator-middleware compile",
+    "test": "laboperator-middleware test",
+    "server": "laboperator-middleware server"
+  },
   "dependencies": {
     "ajv": "^6.12.6",
     "camelcase-keys": "^6.2.2",
