@@ -46,6 +46,15 @@ const normalize = (
   return { headers, body: raw };
 };
 
+const parseBody = (body: string) => {
+  try {
+    return _.isString(body) ? JSON.parse(body) : body;
+  } catch {
+    // string, but not json
+    return body;
+  }
+};
+
 const getProvider = (url: string) =>
   _.findKey(mocks, (_provider, key) => url.startsWith(key));
 
@@ -58,10 +67,7 @@ const getMock = (url: string, { body, method }: MockRequest) => {
         (mock) =>
           mock.endpoint === endpoint &&
           _.lowerCase(mock.method || 'get') === _.lowerCase(method || 'get') &&
-          _.isMatch(
-            _.isString(body) ? JSON.parse(body) : body,
-            normalize(mock, 'request').body
-          )
+          _.isMatch(parseBody(body as string), normalize(mock, 'request').body)
       )
     : undefined;
 };

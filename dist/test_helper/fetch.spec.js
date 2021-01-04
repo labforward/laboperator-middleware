@@ -44,6 +44,15 @@ const normalize = (object, key) => {
   };
 };
 
+const parseBody = body => {
+  try {
+    return _lodash.default.isString(body) ? JSON.parse(body) : body;
+  } catch {
+    // string, but not json
+    return body;
+  }
+};
+
 const getProvider = url => _lodash.default.findKey(mocks, (_provider, key) => url.startsWith(key));
 
 const getMock = (url, {
@@ -52,7 +61,7 @@ const getMock = (url, {
 }) => {
   const provider = getProvider(url);
   const endpoint = provider && url.replace(provider, '');
-  return provider ? (mocks[provider] || []).find(mock => mock.endpoint === endpoint && _lodash.default.lowerCase(mock.method || 'get') === _lodash.default.lowerCase(method || 'get') && _lodash.default.isMatch(_lodash.default.isString(body) ? JSON.parse(body) : body, normalize(mock, 'request').body)) : undefined;
+  return provider ? (mocks[provider] || []).find(mock => mock.endpoint === endpoint && _lodash.default.lowerCase(mock.method || 'get') === _lodash.default.lowerCase(method || 'get') && _lodash.default.isMatch(parseBody(body), normalize(mock, 'request').body)) : undefined;
 };
 
 const matcher = (url, options) => !!getMock(url, options);
