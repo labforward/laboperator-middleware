@@ -18,7 +18,7 @@ export interface Authentication {
     body: Record<string, string>,
     options?: FetchOptions & RetryOptions
   ) => Promise<Token>;
-  get: (user: string) => Promise<string>;
+  get: (user?: string) => Promise<string>;
   store: (user: string, token: Token) => void;
 }
 
@@ -117,10 +117,11 @@ export default (
 ): Authentication => {
   if (authentications[application]) return authentications[application];
 
-  const loadTokens = () => {
+  const tokens: Tokens = (() => {
     if (persisted) {
       const storage = require('../storage').default(`tokens-${application}`);
-      const tokens = {
+
+      return {
         cache: wrapInPromises(
           isTest ? fixturesFor(application) : storage.load()
         ),
@@ -128,110 +129,107 @@ export default (
           unwrapPromises(tokens.cache).then(storage.save);
         },
       };
-
-      return tokens;
     } else {
       return {
         cache: {},
         save: _.noop,
       };
     }
-  };
-  const tokens: Tokens = loadTokens();
+  })();
 
-  const fetchToken = async (
-    body: Record<string, string>,
-    options?: FetchOptions & RetryOptions
-  ): Promise<Token> => {
-    const { authentication } = config.providers[application];
-    const { options: tokenOptions, serializer, ...rest } = authentication.token;
-    const response = await fetch({
-      ...rest,
-      method: 'post',
-      body: serializerFor(serializer)({
-        ...tokenOptions,
-        ...body,
-      }),
-      headers: headersFor(serializer),
-      ...options,
-    });
+  const authentication = {
+    authenticateWith: (token: string) => {
+      if (!token) {
+        throw new UnauthorizedError(application, 'Missing valid accessToken');
+      }
 
-    if (!response.ok) {
-      throw new APIError(
-        application,
-        `Failed fetching token: ${response.statusText}`
+      return {
+        requestInterceptor: (request: FetchOptions) => {
+          request.headers = request.headers || {};
+          request.headers.Authorization = `Bearer ${token}`;
+
+          return request;
+        },
+      };
+    },
+    authenticateAsUser: async (user: string): Promise<AuthenticationHeaders> =>
+      authentication.authenticateWith(await authentication.get(user)),
+    fetchToken: async (
+      body: Record<string, string>,
+      options?: FetchOptions & RetryOptions
+    ): Promise<Token> => {
+      const {
+        authentication: {
+          token: { options: tokenOptions, serializer, ...rest },
+        },
+      } = config.providers[application];
+
+      const response = await fetch({
+        ...rest,
+        method: 'post',
+        body: serializerFor(serializer)({
+          ...tokenOptions,
+          ...body,
+        }),
+        headers: headersFor(serializer),
+        ...options,
+      });
+
+      if (!response.ok) {
+        throw new APIError(
+          application,
+          `Failed fetching token: ${response.statusText}`
+        );
+      }
+
+      const token = camelCaseKeys(
+        response.body as Parameters<typeof camelCaseKeys>[0],
+        { deep: true }
       );
-    }
 
-    const token = camelCaseKeys(
-      response.body as Parameters<typeof camelCaseKeys>[0],
-      { deep: true }
-    );
+      return {
+        createdAt: new Date().getTime(),
+        ...(token as TokenWithOptionalCreatedAt),
+      };
+    },
+    get: async (user = 'default') => {
+      let token = await tokens.cache[user];
 
-    return {
-      createdAt: new Date().getTime(),
-      ...(token as TokenWithOptionalCreatedAt),
-    };
+      if (token && isExpired(token)) {
+        token = await refreshToken(user);
+        authentication.store(user, token);
+      }
+
+      return token && token.accessToken;
+    },
+    store: (user: string, token: Token): void => {
+      tokens.cache[user] = Promise.resolve(token);
+      tokens.save();
+    },
   };
 
-  const refreshToken = async (user: string) => {
+  async function refreshToken(user: string) {
     config.logger.debug(`[API][${application}] Starting Refreshing Token`);
 
-    tokens.cache[user] = fetchToken(
-      user === 'default'
-        ? {}
-        : {
-            grantType: 'refresh_token',
-            refreshToken: (await tokens.cache[user]).refreshToken,
-          }
-    ).then((token) => {
-      config.logger.debug(`[API][${application}] Completed Refreshing Token`);
+    tokens.cache[user] = authentication
+      .fetchToken(
+        user === 'default'
+          ? {}
+          : {
+              grantType: 'refresh_token',
+              refreshToken: (await tokens.cache[user]).refreshToken,
+            }
+      )
+      .then((token) => {
+        config.logger.debug(`[API][${application}] Completed Refreshing Token`);
 
-      return token;
-    });
+        return token;
+      });
 
     return tokens.cache[user];
-  };
+  }
 
-  const store = (user: string, token: Token): void => {
-    tokens.cache[user] = Promise.resolve(token);
-    tokens.save();
-  };
-
-  const get = async (user = 'default') => {
-    let token = await tokens.cache[user];
-
-    if (token && isExpired(token)) {
-      token = await refreshToken(user);
-      store(user, token);
-    }
-
-    return token && token.accessToken;
-  };
-
-  const authenticateWith = (token: string) => {
-    if (!token) {
-      throw new UnauthorizedError(application, 'Missing valid accessToken');
-    }
-
-    return {
-      requestInterceptor: (request: FetchOptions) => {
-        request.headers = request.headers || {};
-        request.headers.Authorization = `Bearer ${token}`;
-
-        return request;
-      },
-    };
-  };
-
-  authentications[application] = {
-    authenticateWith,
-    authenticateAsUser: async (user: string): Promise<AuthenticationHeaders> =>
-      authenticateWith(await get(user)),
-    fetchToken,
-    get,
-    store,
-  };
+  authentications[application] = authentication;
 
   return authentications[application];
 };
