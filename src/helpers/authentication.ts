@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import camelCaseKeys from 'camelcase-keys';
 
-import { APIError, UnauthorizedError } from '~/errors';
+import { APIError, BadRequestError, UnauthorizedError } from '~/errors';
 import config from '~/config';
 
 import fetch, { FetchOptions, RetryOptions } from './fetch';
@@ -25,6 +25,8 @@ export interface Authentication {
 interface TokenWithOptionalCreatedAt {
   accessToken: string;
   refreshToken: string;
+  scope: string;
+  tokenType: string;
   createdAt?: string | number;
   expiresIn: string | number;
 }
@@ -39,6 +41,14 @@ interface Tokens {
 }
 
 const authentications: Record<string, Authentication> = {};
+const emptyToken: Token = {
+  accessToken: '',
+  refreshToken: '',
+  scope: '',
+  tokenType: '',
+  createdAt: 0,
+  expiresIn: 0,
+};
 const isTest = process.env.NODE_ENV === 'test';
 
 const headersFor = (serializer: string) => {
@@ -93,17 +103,17 @@ const unwrapPromises = async (object: Record<string, Promise<Token>>) => {
   return unwrapped;
 };
 
-const fixturesFor = (application: string) => {
+const fixturesFor = (application: string): Record<string, Token> => {
   switch (application) {
     case 'laboperator':
       return {
         1: {
-          createdAt: Number(new Date()),
           accessToken: 'laboperator-access-token',
-          tokenType: 'Bearer',
-          expiresIn: 3600,
           refreshToken: 'laboperator-refresh-token',
           scope: 'read',
+          tokenType: 'Bearer',
+          createdAt: Number(new Date()),
+          expiresIn: 3600,
         },
       };
     default:
@@ -131,7 +141,7 @@ export default (
       };
     } else {
       return {
-        cache: {},
+        cache: wrapInPromises(isTest ? fixturesFor(application) : {}),
         save: _.noop,
       };
     }
@@ -152,8 +162,20 @@ export default (
         },
       };
     },
-    authenticateAsUser: async (user: string): Promise<AuthenticationHeaders> =>
-      authentication.authenticateWith(await authentication.get(user)),
+    authenticateAsUser: async (
+      user: string
+    ): Promise<AuthenticationHeaders> => {
+      const token = await authentication.get(user);
+
+      if (!token) {
+        throw new BadRequestError(
+          application,
+          `User#${user} has not authorize the application`
+        );
+      }
+
+      return authentication.authenticateWith(token);
+    },
     fetchToken: async (
       body: Record<string, string>,
       options?: FetchOptions & RetryOptions
@@ -193,7 +215,7 @@ export default (
       };
     },
     get: async (user = 'default') => {
-      let token = await tokens.cache[user];
+      let token = await readCacheSafe(user);
 
       if (token && isExpired(token)) {
         token = await refreshToken(user);
@@ -208,28 +230,56 @@ export default (
     },
   };
 
+  async function readCacheSafe(user: string) {
+    return tokens.cache[user]?.catch(() => emptyToken);
+  }
+
   async function refreshToken(user: string) {
-    config.logger.debug(`[API][${application}] Starting Refreshing Token`);
+    const token = await readCacheSafe(user);
+    let options;
+
+    if (user === 'default') {
+      options = {};
+    } else if (token?.refreshToken) {
+      options = {
+        grantType: 'refresh_token',
+        refreshToken: token.refreshToken,
+      };
+    } else {
+      throw new BadRequestError(
+        application,
+        `Missing refresh token for User#${user}`
+      );
+    }
+
+    config.logger.debug(
+      `[API][${application}][User#${user}] Starting Refreshing Token`
+    );
 
     tokens.cache[user] = authentication
-      .fetchToken(
-        user === 'default'
-          ? {}
-          : {
-              grantType: 'refresh_token',
-              refreshToken: (await tokens.cache[user]).refreshToken,
-            }
-      )
-      .then((token) => {
-        config.logger.debug(`[API][${application}] Completed Refreshing Token`);
+      .fetchToken(options)
+      .then((newToken) => {
+        config.logger.debug(
+          `[API][${application}][User#${user}] Completed Refreshing Token`
+        );
 
-        return token;
+        return newToken;
+      })
+      .catch((error) => {
+        config.logger.debug(
+          `[API][${application}][User#${user}] Failed Refreshing Token`
+        );
+
+        // reset cached rejected promise with what it was to keep the refresh token
+        tokens.cache[user] = Promise.resolve(token);
+
+        throw error;
       });
 
     return tokens.cache[user];
   }
 
-  authentications[application] = authentication;
+  if (!isTest) authentications[application] = authentication;
 
-  return authentications[application];
+  return authentication;
 };
