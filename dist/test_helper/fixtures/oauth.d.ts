@@ -4,6 +4,27 @@ declare const _default: ({
     request: {
         grant_type: string;
         code: string;
+        refresh_token?: undefined;
+    };
+    response: {
+        access_token: string;
+        token_type: string;
+        expires_in: number;
+        refresh_token: string;
+        scope: string;
+        created_at: number;
+        status?: undefined;
+        body?: undefined;
+        resource_owner_id?: undefined;
+        application?: undefined;
+    };
+} | {
+    endpoint: string;
+    method: string;
+    request: {
+        grant_type: string;
+        refresh_token: string;
+        code?: undefined;
     };
     response: {
         access_token: string;
@@ -23,6 +44,7 @@ declare const _default: ({
     request: {
         grant_type: string;
         code: string;
+        refresh_token?: undefined;
     };
     response: {
         status: number;
@@ -45,6 +67,7 @@ declare const _default: ({
     request: {
         grant_type: string;
         code?: undefined;
+        refresh_token?: undefined;
     };
     response: {
         access_token: string;

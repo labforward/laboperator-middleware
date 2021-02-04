@@ -23,6 +23,21 @@ var _default = [{
   endpoint: '/oauth/token',
   method: 'post',
   request: {
+    grant_type: 'refresh_token',
+    refresh_token: 'laboperator-refresh-token'
+  },
+  response: {
+    access_token: 'fresh-access-token',
+    token_type: 'Bearer',
+    expires_in: 3600,
+    refresh_token: 'laboperator-refresh-token',
+    scope: 'read',
+    created_at: Number(new Date()) / 1000
+  }
+}, {
+  endpoint: '/oauth/token',
+  method: 'post',
+  request: {
     grant_type: 'authorization_code',
     code: 'invalid-code'
   },

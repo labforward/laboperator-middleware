@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import camelCaseKeys from 'camelcase-keys';
 
-import { APIError, UnauthorizedError } from '~/errors';
+import { APIError, BadRequestError, UnauthorizedError } from '~/errors';
 import config from '~/config';
 
 import fetch, { FetchOptions, RetryOptions } from './fetch';
@@ -18,13 +18,15 @@ export interface Authentication {
     body: Record<string, string>,
     options?: FetchOptions & RetryOptions
   ) => Promise<Token>;
-  get: (user: string) => Promise<string>;
+  get: (user?: string) => Promise<string>;
   store: (user: string, token: Token) => void;
 }
 
 interface TokenWithOptionalCreatedAt {
   accessToken: string;
   refreshToken: string;
+  scope: string;
+  tokenType: string;
   createdAt?: string | number;
   expiresIn: string | number;
 }
@@ -39,6 +41,14 @@ interface Tokens {
 }
 
 const authentications: Record<string, Authentication> = {};
+const emptyToken: Token = {
+  accessToken: '',
+  refreshToken: '',
+  scope: '',
+  tokenType: '',
+  createdAt: 0,
+  expiresIn: 0,
+};
 const isTest = process.env.NODE_ENV === 'test';
 
 const headersFor = (serializer: string) => {
@@ -93,17 +103,17 @@ const unwrapPromises = async (object: Record<string, Promise<Token>>) => {
   return unwrapped;
 };
 
-const fixturesFor = (application: string) => {
+const fixturesFor = (application: string): Record<string, Token> => {
   switch (application) {
     case 'laboperator':
       return {
         1: {
-          createdAt: Number(new Date()),
           accessToken: 'laboperator-access-token',
-          tokenType: 'Bearer',
-          expiresIn: 3600,
           refreshToken: 'laboperator-refresh-token',
           scope: 'read',
+          tokenType: 'Bearer',
+          createdAt: Number(new Date()),
+          expiresIn: 3600,
         },
       };
     default:
@@ -117,10 +127,11 @@ export default (
 ): Authentication => {
   if (authentications[application]) return authentications[application];
 
-  const loadTokens = () => {
+  const tokens: Tokens = (() => {
     if (persisted) {
       const storage = require('../storage').default(`tokens-${application}`);
-      const tokens = {
+
+      return {
         cache: wrapInPromises(
           isTest ? fixturesFor(application) : storage.load()
         ),
@@ -128,110 +139,147 @@ export default (
           unwrapPromises(tokens.cache).then(storage.save);
         },
       };
-
-      return tokens;
     } else {
       return {
-        cache: {},
+        cache: wrapInPromises(isTest ? fixturesFor(application) : {}),
         save: _.noop,
       };
     }
+  })();
+
+  const authentication = {
+    authenticateWith: (token: string) => {
+      if (!token) {
+        throw new UnauthorizedError(application, 'Missing valid accessToken');
+      }
+
+      return {
+        requestInterceptor: (request: FetchOptions) => {
+          request.headers = request.headers || {};
+          request.headers.Authorization = `Bearer ${token}`;
+
+          return request;
+        },
+      };
+    },
+    authenticateAsUser: async (
+      user: string
+    ): Promise<AuthenticationHeaders> => {
+      const token = await authentication.get(user);
+
+      if (!token) {
+        throw new BadRequestError(
+          application,
+          `User#${user} has not authorize the application`
+        );
+      }
+
+      return authentication.authenticateWith(token);
+    },
+    fetchToken: async (
+      body: Record<string, string>,
+      options?: FetchOptions & RetryOptions
+    ): Promise<Token> => {
+      const {
+        authentication: {
+          token: { options: tokenOptions, serializer, ...rest },
+        },
+      } = config.providers[application];
+
+      const response = await fetch({
+        ...rest,
+        method: 'post',
+        body: serializerFor(serializer)({
+          ...tokenOptions,
+          ...body,
+        }),
+        headers: headersFor(serializer),
+        ...options,
+      });
+
+      if (!response.ok) {
+        throw new APIError(
+          application,
+          `Failed fetching token: ${response.statusText}`
+        );
+      }
+
+      const token = camelCaseKeys(
+        response.body as Parameters<typeof camelCaseKeys>[0],
+        { deep: true }
+      );
+
+      return {
+        createdAt: new Date().getTime(),
+        ...(token as TokenWithOptionalCreatedAt),
+      };
+    },
+    get: async (user = 'default') => {
+      let token = await readCacheSafe(user);
+
+      if (token && isExpired(token)) {
+        token = await refreshToken(user);
+        authentication.store(user, token);
+      }
+
+      return token && token.accessToken;
+    },
+    store: (user: string, token: Token): void => {
+      tokens.cache[user] = Promise.resolve(token);
+      tokens.save();
+    },
   };
-  const tokens: Tokens = loadTokens();
 
-  const fetchToken = async (
-    body: Record<string, string>,
-    options?: FetchOptions & RetryOptions
-  ): Promise<Token> => {
-    const { authentication } = config.providers[application];
-    const { options: tokenOptions, serializer, ...rest } = authentication.token;
-    const response = await fetch({
-      ...rest,
-      method: 'post',
-      body: serializerFor(serializer)({
-        ...tokenOptions,
-        ...body,
-      }),
-      headers: headersFor(serializer),
-      ...options,
-    });
+  async function readCacheSafe(user: string) {
+    return tokens.cache[user]?.catch(() => emptyToken);
+  }
 
-    if (!response.ok) {
-      throw new APIError(
+  async function refreshToken(user: string) {
+    const token = await readCacheSafe(user);
+    let options;
+
+    if (user === 'default') {
+      options = {};
+    } else if (token?.refreshToken) {
+      options = {
+        grantType: 'refresh_token',
+        refreshToken: token.refreshToken,
+      };
+    } else {
+      throw new BadRequestError(
         application,
-        `Failed fetching token: ${response.statusText}`
+        `Missing refresh token for User#${user}`
       );
     }
 
-    const token = camelCaseKeys(
-      response.body as Parameters<typeof camelCaseKeys>[0],
-      { deep: true }
+    config.logger.debug(
+      `[API][${application}][User#${user}] Starting Refreshing Token`
     );
 
-    return {
-      createdAt: new Date().getTime(),
-      ...(token as TokenWithOptionalCreatedAt),
-    };
-  };
+    tokens.cache[user] = authentication
+      .fetchToken(options)
+      .then((newToken) => {
+        config.logger.debug(
+          `[API][${application}][User#${user}] Completed Refreshing Token`
+        );
 
-  const refreshToken = async (user: string) => {
-    config.logger.debug(`[API][${application}] Starting Refreshing Token`);
+        return newToken;
+      })
+      .catch((error) => {
+        config.logger.debug(
+          `[API][${application}][User#${user}] Failed Refreshing Token`
+        );
 
-    tokens.cache[user] = fetchToken(
-      user === 'default'
-        ? {}
-        : {
-            grantType: 'refresh_token',
-            refreshToken: (await tokens.cache[user]).refreshToken,
-          }
-    ).then((token) => {
-      config.logger.debug(`[API][${application}] Completed Refreshing Token`);
+        // reset cached rejected promise with what it was to keep the refresh token
+        tokens.cache[user] = Promise.resolve(token);
 
-      return token;
-    });
+        throw error;
+      });
 
     return tokens.cache[user];
-  };
+  }
 
-  const store = (user: string, token: Token): void => {
-    tokens.cache[user] = Promise.resolve(token);
-    tokens.save();
-  };
+  if (!isTest) authentications[application] = authentication;
 
-  const get = async (user = 'default') => {
-    let token = await tokens.cache[user];
-
-    if (token && isExpired(token)) {
-      token = await refreshToken(user);
-      store(user, token);
-    }
-
-    return token && token.accessToken;
-  };
-
-  const authenticateWith = (token: string) => {
-    if (!token) {
-      throw new UnauthorizedError(application, 'Missing valid accessToken');
-    }
-
-    return {
-      requestInterceptor: (request: FetchOptions) => {
-        request.headers = request.headers || {};
-        request.headers.Authorization = `Bearer ${token}`;
-
-        return request;
-      },
-    };
-  };
-
-  authentications[application] = {
-    authenticateWith,
-    authenticateAsUser: async (user: string): Promise<AuthenticationHeaders> =>
-      authenticateWith(await get(user)),
-    fetchToken,
-    get,
-    store,
-  };
-
-  return authentications[application];
+  return authentication;
 };

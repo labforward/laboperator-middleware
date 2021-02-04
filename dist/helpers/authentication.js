@@ -22,6 +22,14 @@ var _stringifyJSONParams = _interopRequireDefault(require("./stringifyJSONParams
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 const authentications = {};
+const emptyToken = {
+  accessToken: '',
+  refreshToken: '',
+  scope: '',
+  tokenType: '',
+  createdAt: 0,
+  expiresIn: 0
+};
 const isTest = process.env.NODE_ENV === 'test';
 
 const headersFor = serializer => {
@@ -78,12 +86,12 @@ const fixturesFor = application => {
     case 'laboperator':
       return {
         1: {
-          createdAt: Number(new Date()),
           accessToken: 'laboperator-access-token',
-          tokenType: 'Bearer',
-          expiresIn: 3600,
           refreshToken: 'laboperator-refresh-token',
-          scope: 'read'
+          scope: 'read',
+          tokenType: 'Bearer',
+          createdAt: Number(new Date()),
+          expiresIn: 3600
         }
       };
 
@@ -97,110 +105,131 @@ var _default = (application, {
 } = {}) => {
   if (authentications[application]) return authentications[application];
 
-  const loadTokens = () => {
+  const tokens = (() => {
     if (persisted) {
       const storage = require('../storage').default(`tokens-${application}`);
 
-      const tokens = {
+      return {
         cache: wrapInPromises(isTest ? fixturesFor(application) : storage.load()),
         save: () => {
           unwrapPromises(tokens.cache).then(storage.save);
         }
       };
-      return tokens;
     } else {
       return {
-        cache: {},
+        cache: wrapInPromises(isTest ? fixturesFor(application) : {}),
         save: _lodash.default.noop
       };
     }
+  })();
+
+  const authentication = {
+    authenticateWith: token => {
+      if (!token) {
+        throw new _errors.UnauthorizedError(application, 'Missing valid accessToken');
+      }
+
+      return {
+        requestInterceptor: request => {
+          request.headers = request.headers || {};
+          request.headers.Authorization = `Bearer ${token}`;
+          return request;
+        }
+      };
+    },
+    authenticateAsUser: async (user) => {
+      const token = await authentication.get(user);
+
+      if (!token) {
+        throw new _errors.BadRequestError(application, `User#${user} has not authorize the application`);
+      }
+
+      return authentication.authenticateWith(token);
+    },
+    fetchToken: async (body, options) => {
+      const {
+        authentication: {
+          token: {
+            options: tokenOptions,
+            serializer,
+            ...rest
+          }
+        }
+      } = _config.default.providers[application];
+      const response = await (0, _fetch.default)({ ...rest,
+        method: 'post',
+        body: serializerFor(serializer)({ ...tokenOptions,
+          ...body
+        }),
+        headers: headersFor(serializer),
+        ...options
+      });
+
+      if (!response.ok) {
+        throw new _errors.APIError(application, `Failed fetching token: ${response.statusText}`);
+      }
+
+      const token = (0, _camelcaseKeys.default)(response.body, {
+        deep: true
+      });
+      return {
+        createdAt: new Date().getTime(),
+        ...token
+      };
+    },
+    get: async (user = 'default') => {
+      let token = await readCacheSafe(user);
+
+      if (token && isExpired(token)) {
+        token = await refreshToken(user);
+        authentication.store(user, token);
+      }
+
+      return token && token.accessToken;
+    },
+    store: (user, token) => {
+      tokens.cache[user] = Promise.resolve(token);
+      tokens.save();
+    }
   };
 
-  const tokens = loadTokens();
+  async function readCacheSafe(user) {
+    return tokens.cache[user]?.catch(() => emptyToken);
+  }
 
-  const fetchToken = async (body, options) => {
-    const {
-      authentication
-    } = _config.default.providers[application];
-    const {
-      options: tokenOptions,
-      serializer,
-      ...rest
-    } = authentication.token;
-    const response = await (0, _fetch.default)({ ...rest,
-      method: 'post',
-      body: serializerFor(serializer)({ ...tokenOptions,
-        ...body
-      }),
-      headers: headersFor(serializer),
-      ...options
-    });
+  async function refreshToken(user) {
+    const token = await readCacheSafe(user);
+    let options;
 
-    if (!response.ok) {
-      throw new _errors.APIError(application, `Failed fetching token: ${response.statusText}`);
+    if (user === 'default') {
+      options = {};
+    } else if (token?.refreshToken) {
+      options = {
+        grantType: 'refresh_token',
+        refreshToken: token.refreshToken
+      };
+    } else {
+      throw new _errors.BadRequestError(application, `Missing refresh token for User#${user}`);
     }
 
-    const token = (0, _camelcaseKeys.default)(response.body, {
-      deep: true
-    });
-    return {
-      createdAt: new Date().getTime(),
-      ...token
-    };
-  };
+    _config.default.logger.debug(`[API][${application}][User#${user}] Starting Refreshing Token`);
 
-  const refreshToken = async user => {
-    _config.default.logger.debug(`[API][${application}] Starting Refreshing Token`);
+    tokens.cache[user] = authentication.fetchToken(options).then(newToken => {
+      _config.default.logger.debug(`[API][${application}][User#${user}] Completed Refreshing Token`);
 
-    tokens.cache[user] = fetchToken(user === 'default' ? {} : {
-      grantType: 'refresh_token',
-      refreshToken: (await tokens.cache[user]).refreshToken
-    }).then(token => {
-      _config.default.logger.debug(`[API][${application}] Completed Refreshing Token`);
+      return newToken;
+    }).catch(error => {
+      _config.default.logger.debug(`[API][${application}][User#${user}] Failed Refreshing Token`); // reset cached rejected promise with what it was to keep the refresh token
 
-      return token;
+
+      tokens.cache[user] = Promise.resolve(token);
+      throw error;
     });
     return tokens.cache[user];
-  };
+  }
 
-  const store = (user, token) => {
-    tokens.cache[user] = Promise.resolve(token);
-    tokens.save();
-  };
-
-  const get = async (user = 'default') => {
-    let token = await tokens.cache[user];
-
-    if (token && isExpired(token)) {
-      token = await refreshToken(user);
-      store(user, token);
-    }
-
-    return token && token.accessToken;
-  };
-
-  const authenticateWith = token => {
-    if (!token) {
-      throw new _errors.UnauthorizedError(application, 'Missing valid accessToken');
-    }
-
-    return {
-      requestInterceptor: request => {
-        request.headers = request.headers || {};
-        request.headers.Authorization = `Bearer ${token}`;
-        return request;
-      }
-    };
-  };
-
-  authentications[application] = {
-    authenticateWith,
-    authenticateAsUser: async (user) => authenticateWith(await get(user)),
-    fetchToken,
-    get,
-    store
-  };
-  return authentications[application];
+  if (!isTest) authentications[application] = authentication;
+  return authentication;
 };
 
 exports.default = _default;
