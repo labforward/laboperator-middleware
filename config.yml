@@ -10,7 +10,7 @@ laboperator:
     tokenInfo:
       url: http://localhost:5000/oauth/token/info
 example:
-  url: 'http://example.com/api'
+  url: 'http://example.com/api?foo'
   authentication:
     token:
       url: http://example.com/oauth2/v2.0/token
