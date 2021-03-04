@@ -3,8 +3,6 @@ import { Express, Request, Response } from 'express';
 import { jsonResponse, propagateErrors } from '~/helpers';
 
 export default (app: Express): void => {
-  const laboperator = require('../laboperator');
-
   app.get('/', (_req: Request, res: Response) => {
     res.json(jsonResponse(200));
   });
@@ -12,6 +10,8 @@ export default (app: Express): void => {
   app.get(
     '/auth/callback',
     propagateErrors(async (req, res) => {
+      const laboperator = require('../laboperator');
+
       await laboperator.apis.authorizeUser(req.query);
 
       res.format({
