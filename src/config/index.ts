@@ -59,7 +59,7 @@ _.forEach(config.providers, (provider) => {
     (provider.url as unknown) as string
   ) as unknown) as UrlWithOrigin;
   provider.url.origin = provider.url.href.replace(
-    new RegExp(`${provider.url.path}$`),
+    new RegExp(`${_.escapeRegExp(provider.url.path as string)}$`),
     ''
   );
 });

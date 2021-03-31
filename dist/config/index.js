@@ -54,7 +54,7 @@ if (!valid) throw JSON.stringify(validator.errors);
 _lodash.default.forEach(config.providers, provider => {
   /* eslint-disable no-param-reassign */
   provider.url = _url.default.parse(provider.url);
-  provider.url.origin = provider.url.href.replace(new RegExp(`${provider.url.path}$`), '');
+  provider.url.origin = provider.url.href.replace(new RegExp(`${_lodash.default.escapeRegExp(provider.url.path)}$`), '');
 });
 
 var _default = config;
