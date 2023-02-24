@@ -6,7 +6,7 @@ import fetchRetryFactory from 'fetch-retry';
 export { FetchOptions, RetryOptions } from 'swagger-client';
 
 const fetchRetry = fetchRetryFactory(
-  (http as unknown) as (input: RequestInfo | URL) => Promise<Response>
+  http as unknown as (input: RequestInfo | URL) => Promise<Response>
 );
 
 export default ({
