@@ -3,6 +3,7 @@ import path from 'path';
 import url, { Url } from 'url';
 
 import _ from 'lodash';
+import addFormats from 'ajv-formats';
 import Ajv from 'ajv';
 import yaml from 'yaml';
 
@@ -42,7 +43,7 @@ try {
   // do nothing
 }
 
-const ajv = new Ajv({ useDefaults: true });
+const ajv = addFormats(new Ajv({ useDefaults: true }));
 const schema = yaml.parse(
   fs.readFileSync(path.resolve(__dirname, '../schema/config.yml'), {
     encoding: 'utf8',
@@ -55,9 +56,9 @@ if (!valid) throw JSON.stringify(validator.errors);
 
 _.forEach(config.providers, (provider) => {
   /* eslint-disable no-param-reassign */
-  provider.url = (url.parse(
-    (provider.url as unknown) as string
-  ) as unknown) as UrlWithOrigin;
+  provider.url = url.parse(
+    provider.url as unknown as string
+  ) as unknown as UrlWithOrigin;
   provider.url.origin = provider.url.href.replace(
     new RegExp(`${_.escapeRegExp(provider.url.path as string)}$`),
     ''
