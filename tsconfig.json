@@ -1,11 +1,9 @@
 {
-  "extends": "laboperator-middleware-development/tsconfig",
+  "extends": "laboperator-middleware-development/tsconfig.json",
   "compilerOptions": {
     "baseUrl": "./src",
-    "outDir": "dist",
-    "paths": {
-      "~/*": ["*"]
-    }
+    "esModuleInterop": true,
+    "outDir": "dist"
   },
   "include": ["src"]
 }
