@@ -12,11 +12,7 @@ Object.defineProperty(exports, "server", {
     return _server.default;
   }
 });
-
-require("./chai.spec");
-
 var _fetch = require("./fetch.spec");
-
 Object.keys(_fetch).forEach(function (key) {
   if (key === "default" || key === "__esModule") return;
   if (Object.prototype.hasOwnProperty.call(_exportNames, key)) return;
@@ -28,7 +24,5 @@ Object.keys(_fetch).forEach(function (key) {
     }
   });
 });
-
 var _server = _interopRequireDefault(require("./server.spec"));
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }

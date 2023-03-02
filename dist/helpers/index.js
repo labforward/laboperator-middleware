@@ -45,19 +45,11 @@ Object.defineProperty(exports, "stringifyJSONParams", {
     return _stringifyJSONParams.default;
   }
 });
-
 var _authentication = _interopRequireDefault(require("./authentication"));
-
 var _fetch = _interopRequireDefault(require("./fetch"));
-
 var _getErrorMessage = _interopRequireDefault(require("./getErrorMessage"));
-
 var _jsonResponse = _interopRequireDefault(require("./jsonResponse"));
-
 var _propagateErrors = _interopRequireDefault(require("./propagateErrors"));
-
 var _requireRelative = _interopRequireDefault(require("./requireRelative"));
-
 var _stringifyJSONParams = _interopRequireDefault(require("./stringifyJSONParams"));
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }

@@ -27,13 +27,8 @@ Object.defineProperty(exports, "getAttributesFromResources", {
     return _getAttributesFromResources.default;
   }
 });
-
 var _authorizeUser = _interopRequireDefault(require("./authorizeUser"));
-
 var _decodeToken = _interopRequireDefault(require("./decodeToken"));
-
 var _getAttributesFromResource = _interopRequireDefault(require("./getAttributesFromResource"));
-
 var _getAttributesFromResources = _interopRequireDefault(require("./getAttributesFromResources"));
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }

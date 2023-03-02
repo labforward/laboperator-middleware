@@ -1,12 +1,10 @@
 "use strict";
 
 var _ = _interopRequireDefault(require("."));
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
 describe('config', () => {
   it('includes configuration for all providers', async () => {
-    expect(_.default.providers).to.containSubset({
+    expect(_.default.providers).toMatchObject({
       laboperator: {
         url: {
           protocol: 'http:',

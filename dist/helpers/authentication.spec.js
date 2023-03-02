@@ -1,26 +1,17 @@
 "use strict";
 
-var _assert = require("assert");
-
-var _sinon = _interopRequireDefault(require("sinon"));
-
 var _authentication = _interopRequireDefault(require("./authentication"));
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
 describe('Authentication', () => {
   it('re-resolve previously failing authentication', async () => {
-    const clock = _sinon.default.useFakeTimers();
-
+    jest.useFakeTimers().setSystemTime(0);
     const authentication = (0, _authentication.default)('laboperator');
-    const rejection = Promise.reject('spy');
+    jest.spyOn(authentication, 'fetchToken').mockImplementation(() => Promise.reject());
 
-    const stub = _sinon.default.stub(authentication, 'fetchToken').callsFake(() => rejection); // fake refresh token failure due to e.g. network failure
-
-
-    clock.restore();
-    await (0, _assert.rejects)(authentication.get('1'));
-    stub.restore();
-    expect(await authentication.get('1')).to.eql('fresh-access-token');
+    // fake refresh token failure due to e.g. network failure
+    jest.useRealTimers();
+    await expect(authentication.get('1')).rejects.toBeUndefined();
+    jest.restoreAllMocks();
+    expect(await authentication.get('1')).toEqual('fresh-access-token');
   });
 });
