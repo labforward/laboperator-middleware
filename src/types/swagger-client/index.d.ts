@@ -33,7 +33,7 @@ declare module 'swagger-client' {
     statusCode: number;
     response: FetchResponse<{
       errors?: Array<{ detail: string }>;
-      error_description?: string; // eslint-disable-line camelcase
+      error_description?: string;
     }>;
   }
 

@@ -5,7 +5,6 @@ import { AuthorizationDeniedError } from '~/errors';
 import getTokenInfo from './getTokenInfo';
 
 export default async (
-  // eslint-disable-next-line camelcase
   query: { code?: string; error_description?: string } = {}
 ): Promise<void> => {
   if (!query.code) throw new AuthorizationDeniedError('laboperator', query);
