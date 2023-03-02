@@ -2,7 +2,7 @@ import config from '.';
 
 describe('config', () => {
   it('includes configuration for all providers', async () => {
-    expect(config.providers).to.containSubset({
+    expect(config.providers).toMatchObject({
       laboperator: {
         url: {
           protocol: 'http:',

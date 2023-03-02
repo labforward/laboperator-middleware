@@ -6,7 +6,7 @@ describe('decodeToken', () => {
   it('return a promise resolving to the accessToken', async () => {
     const authentication = await decodeToken('encoded-id');
 
-    expect(authentication).to.containSubset({
+    expect(authentication).toMatchObject({
       accessToken: 'external-access-token',
       userId: '1',
     });

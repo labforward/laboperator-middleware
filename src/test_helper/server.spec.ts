@@ -1,1 +1,3 @@
-export default (): ChaiHttp.Agent => global.request(require('..').default);
+import request from 'supertest';
+
+export default () => request(require('..').default);
