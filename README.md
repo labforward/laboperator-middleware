@@ -6,14 +6,14 @@ By using it, each specialized middleware will be provided with:
 
 - Laboperator API client (with authentication and common api helpers)
 - express server
-- mocha test runner (with api mock for offline development)
+- jest test runner (with api mock for offline development)
 
 ## Installation
 
 - Install it as a dependency using:
 
   ```
-  yarn add git+ssh://git@github.com:labforward/laboperator-middleware.git
+  yarn add labforward/laboperator-middleware
   ```
 
 - Run init:

@@ -5,8 +5,8 @@ describe('Built-in Routes', () => {
     it('should be okay', async () => {
       const response = await server().get('/');
 
-      expect(response).to.have.status(200);
-      expect(response.body).to.containSubset({
+      expect(response).toHaveProperty('status', 200);
+      expect(response.body).toMatchObject({
         status: 'OK',
         code: 200,
       });
@@ -14,12 +14,12 @@ describe('Built-in Routes', () => {
   });
 
   describe('GET /auth/callback', () => {
-    context('given valid code', () => {
+    describe('given valid code', () => {
       it('response 200', async () => {
         const response = await server().get('/auth/callback?code=valid-code');
 
-        expect(response).to.have.status(200);
-        expect(response.body).to.containSubset({
+        expect(response).toHaveProperty('status', 200);
+        expect(response.body).toMatchObject({
           status: 'OK',
           code: 200,
         });
@@ -30,20 +30,20 @@ describe('Built-in Routes', () => {
         const laboperator = require('./laboperator');
         const client = await laboperator.client;
 
-        expect(await client.authentication.get('1')).to.eql(
+        expect(await client.authentication.get('1')).toEqual(
           'laboperator-access-token'
         );
       });
     });
 
-    context('given missing code (e.g. user deny the authorization)', () => {
+    describe('given missing code (e.g. user deny the authorization)', () => {
       it('response 200', async () => {
         const response = await server().get(
           '/auth/callback?error=access_denied&error_description=The+resource+owner+or+authorization+server+denied+the+request.'
         );
 
-        expect(response).to.have.status(200);
-        expect(response.body).to.containSubset({
+        expect(response).toHaveProperty('status', 200);
+        expect(response.body).toMatchObject({
           status: 'OK',
           code: 200,
           details:
@@ -52,12 +52,12 @@ describe('Built-in Routes', () => {
       });
     });
 
-    context('given invalid code', () => {
+    describe('given invalid code', () => {
       it('response 400 in case of invalid code', async () => {
         const response = await server().get('/auth/callback?code=invalid-code');
 
-        expect(response).to.have.status(400);
-        expect(response.body).to.containSubset({
+        expect(response).toHaveProperty('status', 400);
+        expect(response.body).toMatchObject({
           status: 'Bad Request',
           code: 400,
           details:
@@ -71,8 +71,8 @@ describe('Built-in Routes', () => {
     it('response with 404', async () => {
       const response = await server().get('/unknown');
 
-      expect(response).to.have.status(404);
-      expect(response.body).to.containSubset({
+      expect(response).toHaveProperty('status', 404);
+      expect(response.body).toMatchObject({
         status: 'Not Found',
         code: 404,
       });

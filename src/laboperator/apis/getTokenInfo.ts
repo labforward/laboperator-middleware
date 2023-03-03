@@ -16,7 +16,7 @@ export default async (token: string): Promise<TokenInfo> => {
 
   const response = await fetch({ url });
 
-  return camelCaseKeys<TokenInfo>((response.body as unknown) as TokenInfo, {
+  return camelCaseKeys<TokenInfo>(response.body as unknown as TokenInfo, {
     deep: true,
   });
 };

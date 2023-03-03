@@ -1,4 +1,3 @@
-/* eslint-disable mocha/no-exports */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import _ from 'lodash';
 import fetchMock, { MockMatcherFunction, MockRequest } from 'fetch-mock';

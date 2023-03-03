@@ -1,4 +1,3 @@
 {
-  "extends": "laboperator-middleware-development/babel.config.json",
-  "ignore": ["**/*.d.ts"]
+  "extends": "laboperator-middleware-development/babel.config.json"
 }

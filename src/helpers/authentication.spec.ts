@@ -1,24 +1,20 @@
-import { rejects } from 'assert';
-
-import sinon from 'sinon';
-
 import factory from './authentication';
 
 describe('Authentication', () => {
   it('re-resolve previously failing authentication', async () => {
-    const clock = sinon.useFakeTimers();
+    jest.useFakeTimers().setSystemTime(0);
     const authentication = factory('laboperator');
-    const rejection = Promise.reject('spy');
-    const stub = sinon
-      .stub(authentication, 'fetchToken')
-      .callsFake(() => rejection);
+
+    jest
+      .spyOn(authentication, 'fetchToken')
+      .mockImplementation(() => Promise.reject());
 
     // fake refresh token failure due to e.g. network failure
-    clock.restore();
-    await rejects(authentication.get('1'));
+    jest.useRealTimers();
+    await expect(authentication.get('1')).rejects.toBeUndefined();
 
-    stub.restore();
+    jest.restoreAllMocks();
 
-    expect(await authentication.get('1')).to.eql('fresh-access-token');
+    expect(await authentication.get('1')).toEqual('fresh-access-token');
   });
 });

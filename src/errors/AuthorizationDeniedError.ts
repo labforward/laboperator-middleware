@@ -1,7 +1,6 @@
 import APIError from './APIError';
 
 class AuthorizationDeniedError extends APIError {
-  // eslint-disable-next-line camelcase
   constructor(application: string, query: { error_description?: string }) {
     super(application, query.error_description);
   }

@@ -1,4 +1,4 @@
-declare type MockResponseBody = any;
+type MockResponseBody = any;
 interface Fixture {
     endpoint: string;
     method?: string;

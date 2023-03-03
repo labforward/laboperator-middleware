@@ -3,4 +3,3 @@ log
 node_modules
 storage/tokens-*
 yarn-error.log
-dist

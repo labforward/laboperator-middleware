@@ -4,16 +4,13 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = void 0;
-
 var _helpers = require("../helpers");
-
 var _default = app => {
   app.get('/', (_req, res) => {
     res.json((0, _helpers.jsonResponse)(200));
   });
   app.get('/auth/callback', (0, _helpers.propagateErrors)(async (req, res) => {
     const laboperator = require('../laboperator');
-
     await laboperator.apis.authorizeUser(req.query);
     res.format({
       'application/json': () => {
@@ -25,5 +22,4 @@ var _default = app => {
     });
   }));
 };
-
 exports.default = _default;

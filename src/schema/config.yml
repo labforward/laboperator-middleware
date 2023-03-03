@@ -21,7 +21,7 @@ properties:
         properties:
           token:
             type: object
-            require:
+            required:
               - url
             properties:
               url:
@@ -40,7 +40,7 @@ properties:
               options:
                 type: object
                 default: {}
-                require:
+                required:
                   - clientId
                   - clientSecret
                 properties:
@@ -61,7 +61,7 @@ properties:
                     type: string
           tokenInfo:
             type: object
-            require:
+            required:
               - url
             properties:
               url:

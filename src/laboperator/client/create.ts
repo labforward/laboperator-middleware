@@ -42,11 +42,10 @@ export default async (): Promise<LaboperatorClient> => {
 
   await fetchDefaultToken();
 
-  const client: LaboperatorClient = await new ((SwaggerClient as unknown) as Constructor)(
-    {
+  const client: LaboperatorClient =
+    await new (SwaggerClient as unknown as Constructor)({
       url: `${config.providers.laboperator.url.origin}/api/v2/documentation.json`,
-    }
-  );
+    });
 
   if (client.errors.length) {
     throw new APIError('laboperator', `Failed with ${client.errors}`);

@@ -4,23 +4,14 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = void 0;
-
 var _lodash = _interopRequireDefault(require("lodash"));
-
 var _camelcaseKeys = _interopRequireDefault(require("camelcase-keys"));
-
 var _errors = require("../errors");
-
 var _config = _interopRequireDefault(require("../config"));
-
 var _fetch = _interopRequireDefault(require("./fetch"));
-
 var _serializeFormData = _interopRequireDefault(require("./serializeFormData"));
-
 var _stringifyJSONParams = _interopRequireDefault(require("./stringifyJSONParams"));
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
 const authentications = {};
 const emptyToken = {
   accessToken: '',
@@ -31,12 +22,10 @@ const emptyToken = {
   expiresIn: 0
 };
 const isTest = process.env.NODE_ENV === 'test';
-
 const headersFor = serializer => {
   switch (serializer) {
     case 'multipart/form-data':
       return {};
-
     default:
       return {
         'Content-Type': 'application/json',
@@ -44,17 +33,14 @@ const headersFor = serializer => {
       };
   }
 };
-
 const serializerFor = serializer => {
   switch (serializer) {
     case 'multipart/form-data':
       return _serializeFormData.default;
-
     default:
       return _stringifyJSONParams.default;
   }
 };
-
 const toMilliseconds = timestamp => {
   if (_lodash.default.isString(timestamp)) return Number(new Date(timestamp)); // ISO8601 string
 
@@ -70,9 +56,7 @@ const isExpired = token => {
 
   return expiresAt < Number(new Date());
 };
-
 const wrapInPromises = object => _lodash.default.mapValues(object, value => Promise.resolve(value));
-
 const unwrapPromises = async object => {
   const unwrapped = {};
   await Promise.all(_lodash.default.map(object, async (value, key) => {
@@ -80,7 +64,6 @@ const unwrapPromises = async object => {
   }));
   return unwrapped;
 };
-
 const fixturesFor = application => {
   switch (application) {
     case 'laboperator':
@@ -94,21 +77,17 @@ const fixturesFor = application => {
           expiresIn: 3600
         }
       };
-
     default:
       return {};
   }
 };
-
 var _default = (application, {
   persisted = false
 } = {}) => {
   if (authentications[application]) return authentications[application];
-
   const tokens = (() => {
     if (persisted) {
       const storage = require('../storage').default(`tokens-${application}`);
-
       return {
         cache: wrapInPromises(isTest ? fixturesFor(application) : storage.load()),
         save: () => {
@@ -122,13 +101,11 @@ var _default = (application, {
       };
     }
   })();
-
   const authentication = {
     authenticateWith: token => {
       if (!token) {
         throw new _errors.UnauthorizedError(application, 'Missing valid accessToken');
       }
-
       return {
         requestInterceptor: request => {
           request.headers = request.headers || {};
@@ -137,13 +114,11 @@ var _default = (application, {
         }
       };
     },
-    authenticateAsUser: async (user) => {
+    authenticateAsUser: async user => {
       const token = await authentication.get(user);
-
       if (!token) {
         throw new _errors.BadRequestError(application, `User#${user} has not authorize the application`);
       }
-
       return authentication.authenticateWith(token);
     },
     fetchToken: async (body, options) => {
@@ -156,19 +131,19 @@ var _default = (application, {
           }
         }
       } = _config.default.providers[application];
-      const response = await (0, _fetch.default)({ ...rest,
+      const response = await (0, _fetch.default)({
+        ...rest,
         method: 'post',
-        body: serializerFor(serializer)({ ...tokenOptions,
+        body: serializerFor(serializer)({
+          ...tokenOptions,
           ...body
         }),
         headers: headersFor(serializer),
         ...options
       });
-
       if (!response.ok) {
         throw new _errors.APIError(application, `Failed fetching token: ${response.statusText}`);
       }
-
       const token = (0, _camelcaseKeys.default)(response.body, {
         deep: true
       });
@@ -179,12 +154,10 @@ var _default = (application, {
     },
     get: async (user = 'default') => {
       let token = await readCacheSafe(user);
-
       if (token && isExpired(token)) {
         token = await refreshToken(user);
         authentication.store(user, token);
       }
-
       return token && token.accessToken;
     },
     store: (user, token) => {
@@ -192,15 +165,12 @@ var _default = (application, {
       tokens.save();
     }
   };
-
   async function readCacheSafe(user) {
     return tokens.cache[user]?.catch(() => emptyToken);
   }
-
   async function refreshToken(user) {
     const token = await readCacheSafe(user);
     let options;
-
     if (user === 'default') {
       options = {};
     } else if (token?.refreshToken) {
@@ -211,25 +181,20 @@ var _default = (application, {
     } else {
       throw new _errors.BadRequestError(application, `Missing refresh token for User#${user}`);
     }
-
     _config.default.logger.debug(`[API][${application}][User#${user}] Starting Refreshing Token`);
-
     tokens.cache[user] = authentication.fetchToken(options).then(newToken => {
       _config.default.logger.debug(`[API][${application}][User#${user}] Completed Refreshing Token`);
-
       return newToken;
     }).catch(error => {
-      _config.default.logger.debug(`[API][${application}][User#${user}] Failed Refreshing Token`); // reset cached rejected promise with what it was to keep the refresh token
+      _config.default.logger.debug(`[API][${application}][User#${user}] Failed Refreshing Token`);
 
-
+      // reset cached rejected promise with what it was to keep the refresh token
       tokens.cache[user] = Promise.resolve(token);
       throw error;
     });
     return tokens.cache[user];
   }
-
   if (!isTest) authentications[application] = authentication;
   return authentication;
 };
-
 exports.default = _default;
