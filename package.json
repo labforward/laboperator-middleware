@@ -15,10 +15,13 @@
     "./test_helper": "./dist/test_helper/index.js"
   },
   "scripts": {
+    "build": "laboperator-middleware build middleware",
     "clean": "laboperator-middleware clean",
     "compile": "laboperator-middleware compile",
     "test": "laboperator-middleware test",
-    "server": "laboperator-middleware server"
+    "test:watch": "laboperator-middleware test --watch",
+    "server": "laboperator-middleware server",
+    "server:watch": "laboperator-middleware server --watch"
   },
   "dependencies": {
     "ajv": "^8.12.0",
