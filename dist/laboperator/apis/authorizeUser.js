@@ -14,8 +14,8 @@ var _default = async (query = {}) => {
     authentication
   } = client;
   const token = await authentication.fetchToken({
-    grantType: 'authorization_code',
-    code: query.code
+    code: query.code,
+    grantType: 'authorization_code'
   });
   const tokenInfo = await (0, _getTokenInfo.default)(token.accessToken);
   authentication.store(tokenInfo.resourceOwnerId, token);

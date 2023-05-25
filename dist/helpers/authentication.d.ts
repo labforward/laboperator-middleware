@@ -3,19 +3,19 @@ export interface AuthenticationHeaders {
     requestInterceptor: (options: FetchOptions) => FetchOptions;
 }
 export interface Authentication {
-    authenticateWith: (token: string) => AuthenticationHeaders;
     authenticateAsUser: (user: string) => Promise<AuthenticationHeaders>;
+    authenticateWith: (token: string) => AuthenticationHeaders;
     fetchToken: (body: Record<string, string>, options?: FetchOptions & RetryOptions) => Promise<Token>;
     get: (user?: string) => Promise<string>;
     store: (user: string, token: Token) => void;
 }
 interface TokenWithOptionalCreatedAt {
     accessToken: string;
+    createdAt?: string | number;
+    expiresIn: string | number;
     refreshToken: string;
     scope: string;
     tokenType: string;
-    createdAt?: string | number;
-    expiresIn: string | number;
 }
 interface Token extends TokenWithOptionalCreatedAt {
     createdAt: string | number;

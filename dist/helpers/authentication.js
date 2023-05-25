@@ -4,10 +4,10 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = void 0;
-var _lodash = _interopRequireDefault(require("lodash"));
 var _camelcaseKeys = _interopRequireDefault(require("camelcase-keys"));
-var _errors = require("../errors");
+var _lodash = _interopRequireDefault(require("lodash"));
 var _config = _interopRequireDefault(require("../config"));
+var _errors = require("../errors");
 var _fetch = _interopRequireDefault(require("./fetch"));
 var _serializeFormData = _interopRequireDefault(require("./serializeFormData"));
 var _stringifyJSONParams = _interopRequireDefault(require("./stringifyJSONParams"));
@@ -15,11 +15,11 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 const authentications = {};
 const emptyToken = {
   accessToken: '',
+  createdAt: 0,
+  expiresIn: 0,
   refreshToken: '',
   scope: '',
-  tokenType: '',
-  createdAt: 0,
-  expiresIn: 0
+  tokenType: ''
 };
 const isTest = process.env.NODE_ENV === 'test';
 const headersFor = serializer => {
@@ -28,8 +28,8 @@ const headersFor = serializer => {
       return {};
     default:
       return {
-        'Content-Type': 'application/json',
-        Accept: 'application/json'
+        Accept: 'application/json',
+        'Content-Type': 'application/json'
       };
   }
 };
@@ -70,11 +70,11 @@ const fixturesFor = application => {
       return {
         1: {
           accessToken: 'laboperator-access-token',
+          createdAt: Number(new Date()),
+          expiresIn: 3600,
           refreshToken: 'laboperator-refresh-token',
           scope: 'read',
-          tokenType: 'Bearer',
-          createdAt: Number(new Date()),
-          expiresIn: 3600
+          tokenType: 'Bearer'
         }
       };
     default:
@@ -102,6 +102,13 @@ var _default = (application, {
     }
   })();
   const authentication = {
+    authenticateAsUser: async user => {
+      const token = await authentication.get(user);
+      if (!token) {
+        throw new _errors.BadRequestError(application, `User#${user} has not authorize the application`);
+      }
+      return authentication.authenticateWith(token);
+    },
     authenticateWith: token => {
       if (!token) {
         throw new _errors.UnauthorizedError(application, 'Missing valid accessToken');
@@ -113,13 +120,6 @@ var _default = (application, {
           return request;
         }
       };
-    },
-    authenticateAsUser: async user => {
-      const token = await authentication.get(user);
-      if (!token) {
-        throw new _errors.BadRequestError(application, `User#${user} has not authorize the application`);
-      }
-      return authentication.authenticateWith(token);
     },
     fetchToken: async (body, options) => {
       const {
@@ -133,12 +133,12 @@ var _default = (application, {
       } = _config.default.providers[application];
       const response = await (0, _fetch.default)({
         ...rest,
-        method: 'post',
         body: serializerFor(serializer)({
           ...tokenOptions,
           ...body
         }),
         headers: headersFor(serializer),
+        method: 'post',
         ...options
       });
       if (!response.ok) {

@@ -5,22 +5,22 @@ interface UrlWithOrigin extends Url {
     origin: string;
 }
 interface Config {
+    logger: Logger;
     providers: {
         [provider: string]: {
-            url: UrlWithOrigin;
             authentication: {
                 token: {
-                    url: string;
                     options: Record<string, string>;
                     serializer: string;
+                    url: string;
                 };
                 tokenInfo: {
                     url: string;
                 };
             };
+            url: UrlWithOrigin;
         };
     };
-    logger: Logger;
 }
 declare const config: Config;
 export { logger };

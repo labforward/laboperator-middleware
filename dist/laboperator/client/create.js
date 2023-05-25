@@ -5,8 +5,8 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 var _swaggerClient = _interopRequireDefault(require("swagger-client"));
-var _errors = require("../../errors");
 var _config = _interopRequireDefault(require("../../config"));
+var _errors = require("../../errors");
 var _authentication = _interopRequireDefault(require("./authentication"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 const fetchDefaultToken = async () => {
