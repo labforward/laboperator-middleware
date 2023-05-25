@@ -2,9 +2,9 @@ import fs from 'fs';
 import path from 'path';
 import url, { Url } from 'url';
 
-import _ from 'lodash';
-import addFormats from 'ajv-formats';
 import Ajv from 'ajv';
+import addFormats from 'ajv-formats';
+import _ from 'lodash';
 import yaml from 'yaml';
 
 import logger, { Logger } from './logger';
@@ -14,25 +14,25 @@ interface UrlWithOrigin extends Url {
 }
 
 interface Config {
+  logger: Logger;
   providers: {
     [provider: string]: {
-      url: UrlWithOrigin;
       authentication: {
         token: {
-          url: string;
           options: Record<string, string>;
           serializer: string;
+          url: string;
         };
         tokenInfo: {
           url: string;
         };
       };
+      url: UrlWithOrigin;
     };
   };
-  logger: Logger;
 }
 
-const config: Config = { providers: {}, logger };
+const config: Config = { logger, providers: {} };
 
 try {
   _.merge(

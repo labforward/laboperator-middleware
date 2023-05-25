@@ -1,8 +1,8 @@
-import _ from 'lodash';
 import camelCaseKeys from 'camelcase-keys';
+import _ from 'lodash';
 
-import { APIError, BadRequestError, UnauthorizedError } from '~/errors';
 import config from '~/config';
+import { APIError, BadRequestError, UnauthorizedError } from '~/errors';
 
 import fetch, { FetchOptions, RetryOptions } from './fetch';
 import serializeFormData from './serializeFormData';
@@ -12,8 +12,8 @@ export interface AuthenticationHeaders {
   requestInterceptor: (options: FetchOptions) => FetchOptions;
 }
 export interface Authentication {
-  authenticateWith: (token: string) => AuthenticationHeaders;
   authenticateAsUser: (user: string) => Promise<AuthenticationHeaders>;
+  authenticateWith: (token: string) => AuthenticationHeaders;
   fetchToken: (
     body: Record<string, string>,
     options?: FetchOptions & RetryOptions
@@ -24,11 +24,11 @@ export interface Authentication {
 
 interface TokenWithOptionalCreatedAt {
   accessToken: string;
+  createdAt?: string | number;
+  expiresIn: string | number;
   refreshToken: string;
   scope: string;
   tokenType: string;
-  createdAt?: string | number;
-  expiresIn: string | number;
 }
 
 interface Token extends TokenWithOptionalCreatedAt {
@@ -43,11 +43,11 @@ interface Tokens {
 const authentications: Record<string, Authentication> = {};
 const emptyToken: Token = {
   accessToken: '',
+  createdAt: 0,
+  expiresIn: 0,
   refreshToken: '',
   scope: '',
   tokenType: '',
-  createdAt: 0,
-  expiresIn: 0,
 };
 const isTest = process.env.NODE_ENV === 'test';
 
@@ -57,8 +57,8 @@ const headersFor = (serializer: string) => {
       return {};
     default:
       return {
-        'Content-Type': 'application/json',
         Accept: 'application/json',
+        'Content-Type': 'application/json',
       };
   }
 };
@@ -109,11 +109,11 @@ const fixturesFor = (application: string): Record<string, Token> => {
       return {
         1: {
           accessToken: 'laboperator-access-token',
+          createdAt: Number(new Date()),
+          expiresIn: 3600,
           refreshToken: 'laboperator-refresh-token',
           scope: 'read',
           tokenType: 'Bearer',
-          createdAt: Number(new Date()),
-          expiresIn: 3600,
         },
       };
     default:
@@ -148,20 +148,6 @@ export default (
   })();
 
   const authentication = {
-    authenticateWith: (token: string) => {
-      if (!token) {
-        throw new UnauthorizedError(application, 'Missing valid accessToken');
-      }
-
-      return {
-        requestInterceptor: (request: FetchOptions) => {
-          request.headers = request.headers || {};
-          request.headers.Authorization = `Bearer ${token}`;
-
-          return request;
-        },
-      };
-    },
     authenticateAsUser: async (
       user: string
     ): Promise<AuthenticationHeaders> => {
@@ -176,6 +162,20 @@ export default (
 
       return authentication.authenticateWith(token);
     },
+    authenticateWith: (token: string) => {
+      if (!token) {
+        throw new UnauthorizedError(application, 'Missing valid accessToken');
+      }
+
+      return {
+        requestInterceptor: (request: FetchOptions) => {
+          request.headers = request.headers || {};
+          request.headers.Authorization = `Bearer ${token}`;
+
+          return request;
+        },
+      };
+    },
     fetchToken: async (
       body: Record<string, string>,
       options?: FetchOptions & RetryOptions
@@ -188,12 +188,12 @@ export default (
 
       const response = await fetch({
         ...rest,
-        method: 'post',
         body: serializerFor(serializer)({
           ...tokenOptions,
           ...body,
         }),
         headers: headersFor(serializer),
+        method: 'post',
         ...options,
       });
 

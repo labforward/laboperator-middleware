@@ -1,5 +1,5 @@
-import _ from 'lodash';
 import FormData from 'form-data';
+import _ from 'lodash';
 
 export default (
   params: Record<string, Parameters<FormData['append']>[1]>

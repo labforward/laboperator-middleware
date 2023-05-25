@@ -1,5 +1,5 @@
-import _ from 'lodash';
 import camelCaseKeys from 'camelcase-keys';
+import _ from 'lodash';
 
 const getAttributesFromResource = (
   raw: ResourceData | Resource

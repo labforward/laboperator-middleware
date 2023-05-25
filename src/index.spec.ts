@@ -7,8 +7,8 @@ describe('Built-in Routes', () => {
 
       expect(response).toHaveProperty('status', 200);
       expect(response.body).toMatchObject({
-        status: 'OK',
         code: 200,
+        status: 'OK',
       });
     });
   });
@@ -20,8 +20,8 @@ describe('Built-in Routes', () => {
 
         expect(response).toHaveProperty('status', 200);
         expect(response.body).toMatchObject({
-          status: 'OK',
           code: 200,
+          status: 'OK',
         });
       });
 
@@ -44,10 +44,10 @@ describe('Built-in Routes', () => {
 
         expect(response).toHaveProperty('status', 200);
         expect(response.body).toMatchObject({
-          status: 'OK',
           code: 200,
           details:
             'The resource owner or authorization server denied the request.',
+          status: 'OK',
         });
       });
     });
@@ -58,10 +58,10 @@ describe('Built-in Routes', () => {
 
         expect(response).toHaveProperty('status', 400);
         expect(response.body).toMatchObject({
-          status: 'Bad Request',
           code: 400,
           details:
             'The provided authorization grant is invalid, expired, revoked, does not match the redirection URI used in the authorization request, or was issued to another client.',
+          status: 'Bad Request',
         });
       });
     });
@@ -73,8 +73,8 @@ describe('Built-in Routes', () => {
 
       expect(response).toHaveProperty('status', 404);
       expect(response.body).toMatchObject({
-        status: 'Not Found',
         code: 404,
+        status: 'Not Found',
       });
     });
   });

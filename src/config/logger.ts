@@ -3,11 +3,11 @@ import winston from 'winston';
 export { Logger } from 'winston';
 
 const logFormatter = winston.format.printf((info) => {
-  const { timestamp, level, response, stack, message } = info;
+  const { level, message, response, stack, timestamp } = info;
 
   if (response) {
     // http error
-    const { status, statusText, body } = response;
+    const { body, status, statusText } = response;
 
     return `${timestamp} ${level}: ${status} ${statusText}
 ${timestamp} ${level}: ${JSON.stringify(body, undefined, 2)}
@@ -19,8 +19,8 @@ ${timestamp} ${level}: ${stack}`;
 
 const logger = winston.createLogger({
   exitOnError: false,
-  level: 'debug',
   format: winston.format.errors({ stack: true }),
+  level: 'debug',
   transports: [
     process.env.NODE_ENV === 'test'
       ? new winston.transports.File({

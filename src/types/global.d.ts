@@ -8,14 +8,14 @@ interface Relationship {
 }
 
 interface Resource {
-  id: string;
-  type: string;
   attributes: Attributes;
+  id: string;
   relationships: {
     [key: string]: {
       data: Array<Relationship> | Relationship;
     };
   };
+  type: string;
 }
 interface ResourceData {
   data?: Resource;

@@ -11,30 +11,30 @@ declare module 'swagger-client' {
 
   interface FetchOptions {
     agent?: HttpsProxyAgent;
-    method?: string;
     body?: string | FormData;
     headers?: Record<string, string | undefined>;
+    method?: string;
     url?: string | URL;
   }
 
   interface FetchResponse<T = unknown> {
+    body: T;
+    data: string;
+    obj: T;
     ok: boolean;
-    url: string;
     status: number;
     statusText: string;
     text: string;
-    data: string;
-    body: T;
-    obj: T;
+    url: string;
   }
 
   interface FetchErrorResponse {
+    response: FetchResponse<{
+      error_description?: string;
+      errors?: Array<{ detail: string }>;
+    }>;
     status: number;
     statusCode: number;
-    response: FetchResponse<{
-      errors?: Array<{ detail: string }>;
-      error_description?: string;
-    }>;
   }
 
   type Http = (options: FetchOptions) => Promise<Response>;

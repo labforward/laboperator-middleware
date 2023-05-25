@@ -18,6 +18,7 @@
     "build": "laboperator-middleware build middleware",
     "clean": "laboperator-middleware clean",
     "compile": "laboperator-middleware compile",
+    "lint": "eslint --fix 'src/**/*.{ts,js}'",
     "test": "laboperator-middleware test",
     "test:watch": "laboperator-middleware test --watch",
     "server": "laboperator-middleware server",

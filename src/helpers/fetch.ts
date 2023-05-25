@@ -1,7 +1,7 @@
-import _ from 'lodash';
-import createHttpsProxyAgent from 'https-proxy-agent';
-import { FetchOptions, RetryOptions, http } from 'swagger-client';
 import fetchRetryFactory from 'fetch-retry';
+import createHttpsProxyAgent from 'https-proxy-agent';
+import _ from 'lodash';
+import { FetchOptions, RetryOptions, http } from 'swagger-client';
 
 export { FetchOptions, RetryOptions } from 'swagger-client';
 

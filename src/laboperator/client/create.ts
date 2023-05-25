@@ -1,15 +1,15 @@
 import SwaggerClient from 'swagger-client';
 
+import config from '~/config';
 import { APIError } from '~/errors';
 import { Authentication } from '~/helpers/authentication';
-import config from '~/config';
 
 import authentication from './authentication';
 
 type Constructor = new ({ url }: { url: string }) => Promise<LaboperatorClient>;
 export interface LaboperatorClient {
-  authentication: Authentication;
   apis: any; // eslint-disable-line @typescript-eslint/no-explicit-any
+  authentication: Authentication;
   errors: Array<string>;
   spec: {
     servers: Array<{ url: string | null }>;
