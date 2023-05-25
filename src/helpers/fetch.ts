@@ -1,5 +1,5 @@
 import fetchRetryFactory from 'fetch-retry';
-import createHttpsProxyAgent from 'https-proxy-agent';
+import { HttpsProxyAgent } from 'https-proxy-agent';
 import _ from 'lodash';
 import { FetchOptions, RetryOptions, http } from 'swagger-client';
 
@@ -14,7 +14,7 @@ export default ({
   ...rest
 }: FetchOptions & RetryOptions & { proxy?: string }): Promise<Response> => {
   const fetchOptions: FetchOptions = proxy
-    ? { agent: createHttpsProxyAgent(proxy), ...rest }
+    ? { agent: new HttpsProxyAgent(proxy), ...rest }
     : rest;
   const retryOptions: RetryOptions = _.pick(rest, [
     'retries',
