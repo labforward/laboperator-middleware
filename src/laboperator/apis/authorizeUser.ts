@@ -1,5 +1,3 @@
-import _ from 'lodash';
-
 import { AuthorizationDeniedError } from '~/errors';
 
 import getTokenInfo from './getTokenInfo';
@@ -13,8 +11,8 @@ export default async (
   const { authentication } = client;
 
   const token = await authentication.fetchToken({
-    grantType: 'authorization_code',
     code: query.code,
+    grantType: 'authorization_code',
   });
   const tokenInfo = await getTokenInfo(token.accessToken);
 

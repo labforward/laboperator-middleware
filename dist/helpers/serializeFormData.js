@@ -4,8 +4,8 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = void 0;
-var _lodash = _interopRequireDefault(require("lodash"));
 var _formData = _interopRequireDefault(require("form-data"));
+var _lodash = _interopRequireDefault(require("lodash"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 var _default = params => {
   const formData = new _formData.default();

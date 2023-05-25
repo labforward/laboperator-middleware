@@ -13,15 +13,15 @@ Object.defineProperty(exports, "logger", {
 var _fs = _interopRequireDefault(require("fs"));
 var _path = _interopRequireDefault(require("path"));
 var _url = _interopRequireDefault(require("url"));
-var _lodash = _interopRequireDefault(require("lodash"));
-var _ajvFormats = _interopRequireDefault(require("ajv-formats"));
 var _ajv = _interopRequireDefault(require("ajv"));
+var _ajvFormats = _interopRequireDefault(require("ajv-formats"));
+var _lodash = _interopRequireDefault(require("lodash"));
 var _yaml = _interopRequireDefault(require("yaml"));
 var _logger = _interopRequireDefault(require("./logger"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 const config = {
-  providers: {},
-  logger: _logger.default
+  logger: _logger.default,
+  providers: {}
 };
 try {
   _lodash.default.merge(config.providers, _yaml.default.parse(_fs.default.readFileSync('./config.yml', {

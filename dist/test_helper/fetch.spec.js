@@ -4,16 +4,14 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.addFixtures = void 0;
-var _lodash = _interopRequireDefault(require("lodash"));
 var _fetchMock = _interopRequireDefault(require("fetch-mock"));
+var _lodash = _interopRequireDefault(require("lodash"));
 var _config = _interopRequireDefault(require("../config"));
 var _fixtures = _interopRequireDefault(require("./fixtures"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 const mocks = {};
-
-// eslint-disable-next-line import/prefer-default-export
 const addFixtures = (provider, fixtures) => {
   mocks[provider] = [...(mocks[provider] || []), ...fixtures];
 };
@@ -30,8 +28,8 @@ const normalize = (object, key) => {
     } : raw;
   }
   return {
-    headers,
-    body: raw
+    body: raw,
+    headers
   };
 };
 const parseBody = body => {

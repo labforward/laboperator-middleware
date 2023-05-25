@@ -2,21 +2,21 @@ declare const _default: ({
     endpoint: string;
     method: string;
     request: {
-        grant_type: string;
         code: string;
+        grant_type: string;
         refresh_token?: undefined;
     };
     response: {
         access_token: string;
-        token_type: string;
+        created_at: number;
         expires_in: number;
         refresh_token: string;
         scope: string;
-        created_at: number;
-        status?: undefined;
+        token_type: string;
         body?: undefined;
-        resource_owner_id?: undefined;
+        status?: undefined;
         application?: undefined;
+        resource_owner_id?: undefined;
     };
 } | {
     endpoint: string;
@@ -28,38 +28,38 @@ declare const _default: ({
     };
     response: {
         access_token: string;
-        token_type: string;
+        created_at: number;
         expires_in: number;
         refresh_token: string;
         scope: string;
-        created_at: number;
-        status?: undefined;
+        token_type: string;
         body?: undefined;
-        resource_owner_id?: undefined;
+        status?: undefined;
         application?: undefined;
+        resource_owner_id?: undefined;
     };
 } | {
     endpoint: string;
     method: string;
     request: {
-        grant_type: string;
         code: string;
+        grant_type: string;
         refresh_token?: undefined;
     };
     response: {
-        status: number;
         body: {
             error: string;
             error_description: string;
         };
+        status: number;
         access_token?: undefined;
-        token_type?: undefined;
+        created_at?: undefined;
         expires_in?: undefined;
         refresh_token?: undefined;
         scope?: undefined;
-        created_at?: undefined;
-        resource_owner_id?: undefined;
+        token_type?: undefined;
         application?: undefined;
+        resource_owner_id?: undefined;
     };
 } | {
     endpoint: string;
@@ -71,31 +71,31 @@ declare const _default: ({
     };
     response: {
         access_token: string;
-        token_type: string;
+        created_at: number;
         expires_in: number;
         refresh_token: string;
         scope: string;
-        created_at: number;
-        status?: undefined;
+        token_type: string;
         body?: undefined;
-        resource_owner_id?: undefined;
+        status?: undefined;
         application?: undefined;
+        resource_owner_id?: undefined;
     };
 } | {
     endpoint: string;
     response: {
-        resource_owner_id: number;
-        scope: string[];
-        expires_in: number;
         application: {
             uid: string;
         };
+        expires_in: number;
+        resource_owner_id: number;
+        scope: string[];
         access_token?: undefined;
-        token_type?: undefined;
-        refresh_token?: undefined;
         created_at?: undefined;
-        status?: undefined;
+        refresh_token?: undefined;
+        token_type?: undefined;
         body?: undefined;
+        status?: undefined;
     };
     method?: undefined;
     request?: undefined;

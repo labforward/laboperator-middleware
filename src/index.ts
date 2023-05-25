@@ -1,9 +1,9 @@
 import path from 'path';
 
-import createError from 'http-errors';
 import express, { NextFunction, Request, Response } from 'express';
-import { FetchErrorResponse } from 'swagger-client';
+import createError from 'http-errors';
 import logger, { StreamOptions } from 'morgan';
+import { FetchErrorResponse } from 'swagger-client';
 
 import config from './config';
 import { getErrorMessage, jsonResponse, requireRelative } from './helpers';

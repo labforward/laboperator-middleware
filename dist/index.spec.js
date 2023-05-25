@@ -7,8 +7,8 @@ describe('Built-in Routes', () => {
       const response = await (0, _test_helper.server)().get('/');
       expect(response).toHaveProperty('status', 200);
       expect(response.body).toMatchObject({
-        status: 'OK',
-        code: 200
+        code: 200,
+        status: 'OK'
       });
     });
   });
@@ -18,8 +18,8 @@ describe('Built-in Routes', () => {
         const response = await (0, _test_helper.server)().get('/auth/callback?code=valid-code');
         expect(response).toHaveProperty('status', 200);
         expect(response.body).toMatchObject({
-          status: 'OK',
-          code: 200
+          code: 200,
+          status: 'OK'
         });
       });
       it("resolve into user's accessTokens", async () => {
@@ -34,9 +34,9 @@ describe('Built-in Routes', () => {
         const response = await (0, _test_helper.server)().get('/auth/callback?error=access_denied&error_description=The+resource+owner+or+authorization+server+denied+the+request.');
         expect(response).toHaveProperty('status', 200);
         expect(response.body).toMatchObject({
-          status: 'OK',
           code: 200,
-          details: 'The resource owner or authorization server denied the request.'
+          details: 'The resource owner or authorization server denied the request.',
+          status: 'OK'
         });
       });
     });
@@ -45,9 +45,9 @@ describe('Built-in Routes', () => {
         const response = await (0, _test_helper.server)().get('/auth/callback?code=invalid-code');
         expect(response).toHaveProperty('status', 400);
         expect(response.body).toMatchObject({
-          status: 'Bad Request',
           code: 400,
-          details: 'The provided authorization grant is invalid, expired, revoked, does not match the redirection URI used in the authorization request, or was issued to another client.'
+          details: 'The provided authorization grant is invalid, expired, revoked, does not match the redirection URI used in the authorization request, or was issued to another client.',
+          status: 'Bad Request'
         });
       });
     });
@@ -57,8 +57,8 @@ describe('Built-in Routes', () => {
       const response = await (0, _test_helper.server)().get('/unknown');
       expect(response).toHaveProperty('status', 404);
       expect(response.body).toMatchObject({
-        status: 'Not Found',
-        code: 404
+        code: 404,
+        status: 'Not Found'
       });
     });
   });

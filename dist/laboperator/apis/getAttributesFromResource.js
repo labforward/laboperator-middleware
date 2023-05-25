@@ -4,8 +4,8 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = void 0;
-var _lodash = _interopRequireDefault(require("lodash"));
 var _camelcaseKeys = _interopRequireDefault(require("camelcase-keys"));
+var _lodash = _interopRequireDefault(require("lodash"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 const getAttributesFromResource = raw => {
   const resource = raw.data || raw;

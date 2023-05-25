@@ -8,12 +8,12 @@ const authentication1 = {
   id: '1',
   type: 'authentication',
   attributes: {
-    provider: 'openid_connect',
-    uid: 'test@example.com',
     access_token: 'external-access-token',
+    created_at: Number(new Date()) / 1000,
     expires_in: 3600,
+    provider: 'openid_connect',
     refresh_token: 'external-refresh-token',
-    created_at: Number(new Date()) / 1000
+    uid: 'test@example.com'
   },
   relationships: {
     user: {
@@ -40,13 +40,13 @@ var _default = [{
 }, {
   endpoint: '/authentications/invalid-id',
   response: {
-    status: 401,
     body: {
       errors: [{
-        status: 401,
-        detail: 'Authentication failed. The access token is invalid.'
+        detail: 'Authentication failed. The access token is invalid.',
+        status: 401
       }]
-    }
+    },
+    status: 401
   }
 }];
 exports.default = _default;

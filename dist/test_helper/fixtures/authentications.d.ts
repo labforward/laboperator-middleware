@@ -5,12 +5,12 @@ declare const _default: ({
             id: string;
             type: string;
             attributes: {
-                provider: string;
-                uid: string;
                 access_token: string;
-                expires_in: number;
-                refresh_token: string;
                 created_at: number;
+                expires_in: number;
+                provider: string;
+                refresh_token: string;
+                uid: string;
             };
             relationships: {
                 user: {
@@ -24,8 +24,8 @@ declare const _default: ({
                 self: string;
             };
         }[];
-        status?: undefined;
         body?: undefined;
+        status?: undefined;
     };
 } | {
     endpoint: string;
@@ -34,12 +34,12 @@ declare const _default: ({
             id: string;
             type: string;
             attributes: {
-                provider: string;
-                uid: string;
                 access_token: string;
-                expires_in: number;
-                refresh_token: string;
                 created_at: number;
+                expires_in: number;
+                provider: string;
+                refresh_token: string;
+                uid: string;
             };
             relationships: {
                 user: {
@@ -53,19 +53,19 @@ declare const _default: ({
                 self: string;
             };
         };
-        status?: undefined;
         body?: undefined;
+        status?: undefined;
     };
 } | {
     endpoint: string;
     response: {
-        status: number;
         body: {
             errors: {
-                status: number;
                 detail: string;
+                status: number;
             }[];
         };
+        status: number;
         data?: undefined;
     };
 })[];

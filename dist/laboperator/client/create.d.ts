@@ -1,7 +1,7 @@
 import { Authentication } from '~/helpers/authentication';
 export interface LaboperatorClient {
-    authentication: Authentication;
     apis: any;
+    authentication: Authentication;
     errors: Array<string>;
     spec: {
         servers: Array<{

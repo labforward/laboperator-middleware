@@ -1,15 +1,17 @@
 const authentication1 = {
   id: '1',
   type: 'authentication',
+
   attributes: {
-    provider: 'openid_connect',
-    uid: 'test@example.com',
     access_token: 'external-access-token',
-    expires_in: 3600,
-    refresh_token: 'external-refresh-token',
     created_at: Number(new Date()) / 1000,
+    expires_in: 3600,
+    provider: 'openid_connect',
+    refresh_token: 'external-refresh-token',
+    uid: 'test@example.com',
   },
   relationships: { user: { data: { id: '1', type: 'user' } } },
+
   links: {
     self: 'http://localhost:5000/api/v2/main/authentications/1',
   },
@@ -31,15 +33,15 @@ export default [
   {
     endpoint: '/authentications/invalid-id',
     response: {
-      status: 401,
       body: {
         errors: [
           {
-            status: 401,
             detail: 'Authentication failed. The access token is invalid.',
+            status: 401,
           },
         ],
       },
+      status: 401,
     },
   },
 ];

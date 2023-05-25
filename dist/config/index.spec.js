@@ -2,6 +2,8 @@
 
 var _ = _interopRequireDefault(require("."));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+/* eslint-disable sort-keys */
+
 describe('config', () => {
   it('includes configuration for all providers', async () => {
     expect(_.default.providers).toMatchObject({

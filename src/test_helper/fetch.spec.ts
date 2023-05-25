@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import _ from 'lodash';
 import fetchMock, { MockMatcherFunction, MockRequest } from 'fetch-mock';
+import _ from 'lodash';
 
 import config from '~/config';
 
@@ -15,15 +15,14 @@ interface Fixture {
   response:
     | MockResponseBody
     | {
-        status: number;
-        headers: Record<string, string>;
         body: MockResponseBody;
+        headers: Record<string, string>;
+        status: number;
       };
 }
 
 const mocks: Record<string, Array<Fixture>> = {};
 
-// eslint-disable-next-line import/prefer-default-export
 export const addFixtures = (
   provider: string,
   fixtures: Array<Fixture>
@@ -42,7 +41,7 @@ const normalize = (
     return raw.body ? { ...raw, headers } : raw;
   }
 
-  return { headers, body: raw };
+  return { body: raw, headers };
 };
 
 const parseBody = (body: string) => {

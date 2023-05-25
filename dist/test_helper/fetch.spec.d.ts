@@ -4,9 +4,9 @@ interface Fixture {
     method?: string;
     request?: any;
     response: MockResponseBody | {
-        status: number;
-        headers: Record<string, string>;
         body: MockResponseBody;
+        headers: Record<string, string>;
+        status: number;
     };
 }
 export declare const addFixtures: (provider: string, fixtures: Array<Fixture>) => void;
