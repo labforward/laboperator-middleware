@@ -17,7 +17,7 @@ Object.defineProperty(exports, "RetryOptions", {
 });
 exports.default = void 0;
 var _fetchRetry = _interopRequireDefault(require("fetch-retry"));
-var _httpsProxyAgent = _interopRequireDefault(require("https-proxy-agent"));
+var _httpsProxyAgent = require("https-proxy-agent");
 var _lodash = _interopRequireDefault(require("lodash"));
 var _swaggerClient = require("swagger-client");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -27,7 +27,7 @@ var _default = ({
   ...rest
 }) => {
   const fetchOptions = proxy ? {
-    agent: (0, _httpsProxyAgent.default)(proxy),
+    agent: new _httpsProxyAgent.HttpsProxyAgent(proxy),
     ...rest
   } : rest;
   const retryOptions = _lodash.default.pick(rest, ['retries', 'retryDelay', 'retryOn']);
