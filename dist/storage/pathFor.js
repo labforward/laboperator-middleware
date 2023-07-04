@@ -8,7 +8,9 @@ var _fs = _interopRequireDefault(require("fs"));
 var _path = _interopRequireDefault(require("path"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 var _default = key => {
-  if (!_fs.default.existsSync('./storage')) _fs.default.mkdirSync('./storage');
+  _fs.default.mkdirSync('./storage', {
+    recursive: true
+  });
   return _path.default.resolve(`./storage/${key}.json`);
 };
 exports.default = _default;
