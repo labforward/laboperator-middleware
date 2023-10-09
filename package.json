@@ -39,7 +39,7 @@
     "morgan": "^1.10.0",
     "snakecase-keys": "^5.4.7",
     "swagger-client": "^3.18.5",
-    "winston": "^3.10.0",
+    "winston": "^3.11.0",
     "yaml": "^2.3.2",
     "yargs": "^17.7.2"
   },
