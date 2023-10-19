@@ -44,5 +44,4 @@ _lodash.default.forEach(config.providers, provider => {
   provider.url = _url.default.parse(provider.url);
   provider.url.origin = provider.url.href.replace(new RegExp(`${_lodash.default.escapeRegExp(provider.url.path)}$`), '');
 });
-var _default = config;
-exports.default = _default;
+var _default = exports.default = config;

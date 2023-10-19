@@ -14,5 +14,4 @@ class AuthorizationDeniedError extends _APIError.default {
   // denying authorization is not really an error, so it's better to response with status 200
   status = 200;
 }
-var _default = AuthorizationDeniedError;
-exports.default = _default;
+var _default = exports.default = AuthorizationDeniedError;

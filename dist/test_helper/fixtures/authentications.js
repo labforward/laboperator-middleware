@@ -27,7 +27,7 @@ const authentication1 = {
     self: 'http://localhost:5000/api/v2/main/authentications/1'
   }
 };
-var _default = [{
+var _default = exports.default = [{
   endpoint: '/authentications',
   response: {
     data: [authentication1]
@@ -49,4 +49,3 @@ var _default = [{
     status: 401
   }
 }];
-exports.default = _default;

@@ -44,5 +44,4 @@ app.use((err, _req, res, _next) => {
   res.status(status);
   res.json((0, _helpers.jsonResponse)(status, (0, _helpers.getErrorMessage)(err)));
 });
-var _default = app;
-exports.default = _default;
+var _default = exports.default = app;

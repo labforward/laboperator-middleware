@@ -4,7 +4,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = void 0;
-var _default = [{
+var _default = exports.default = [{
   endpoint: '/oauth/token',
   method: 'post',
   request: {
@@ -73,4 +73,3 @@ var _default = [{
     scope: ['read']
   }
 }];
-exports.default = _default;

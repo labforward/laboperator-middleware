@@ -12,5 +12,4 @@ class APIError extends Error {
     super(message);
   }
 }
-var _default = APIError;
-exports.default = _default;
+var _default = exports.default = APIError;

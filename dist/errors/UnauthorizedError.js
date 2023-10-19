@@ -9,5 +9,4 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 class UnauthorizedError extends _APIError.default {
   status = 401;
 }
-var _default = UnauthorizedError;
-exports.default = _default;
+var _default = exports.default = UnauthorizedError;

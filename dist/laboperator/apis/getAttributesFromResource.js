@@ -26,5 +26,4 @@ const getAttributesFromResource = raw => {
     ...relationships
   };
 };
-var _default = getAttributesFromResource;
-exports.default = _default;
+var _default = exports.default = getAttributesFromResource;
