@@ -9,5 +9,4 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 class BadRequestError extends _APIError.default {
   status = 400;
 }
-var _default = BadRequestError;
-exports.default = _default;
+var _default = exports.default = BadRequestError;
