@@ -40,7 +40,7 @@
     "snakecase-keys": "^5.5.0",
     "swagger-client": "^3.18.5",
     "winston": "^3.11.0",
-    "yaml": "^2.3.3",
+    "yaml": "^2.3.4",
     "yargs": "^17.7.2"
   },
   "devDependencies": {
