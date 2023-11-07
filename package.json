@@ -38,7 +38,7 @@
     "lodash": "^4.17.21",
     "morgan": "^1.10.0",
     "snakecase-keys": "^5.5.0",
-    "swagger-client": "^3.18.5",
+    "swagger-client": "^3.24.4",
     "winston": "^3.11.0",
     "yaml": "^2.3.4",
     "yargs": "^17.7.2"
