@@ -9,7 +9,7 @@ interface TokenInfo {
 
 export default async (token: string): Promise<TokenInfo> => {
   const url = new URL(
-    config.providers.laboperator.authentication.tokenInfo.url
+    config.providers.laboperator.authentication.tokenInfo.url,
   );
 
   url.searchParams.append('access_token', token);

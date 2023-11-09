@@ -13,22 +13,24 @@ interface UrlWithOrigin extends Url {
   origin: string;
 }
 
-interface Config {
+export interface Provider {
+  authentication: {
+    token: {
+      options: Record<string, string>;
+      serializer: string;
+      url: string;
+    };
+    tokenInfo: {
+      url: string;
+    };
+  };
+  url: UrlWithOrigin;
+}
+
+export interface Config {
   logger: Logger;
   providers: {
-    [provider: string]: {
-      authentication: {
-        token: {
-          options: Record<string, string>;
-          serializer: string;
-          url: string;
-        };
-        tokenInfo: {
-          url: string;
-        };
-      };
-      url: UrlWithOrigin;
-    };
+    [provider: string]: Provider;
   };
 }
 
@@ -37,7 +39,7 @@ const config: Config = { logger, providers: {} };
 try {
   _.merge(
     config.providers,
-    yaml.parse(fs.readFileSync('./config.yml', { encoding: 'utf8' }))
+    yaml.parse(fs.readFileSync('./config.yml', { encoding: 'utf8' })),
   );
 } catch {
   // do nothing
@@ -47,7 +49,7 @@ const ajv = addFormats(new Ajv({ useDefaults: true }));
 const schema = yaml.parse(
   fs.readFileSync(path.resolve(__dirname, '../schema/config.yml'), {
     encoding: 'utf8',
-  })
+  }),
 );
 const validator = ajv.compile(schema);
 const valid = validator(config.providers);
@@ -57,11 +59,11 @@ if (!valid) throw JSON.stringify(validator.errors);
 _.forEach(config.providers, (provider) => {
   /* eslint-disable no-param-reassign */
   provider.url = url.parse(
-    provider.url as unknown as string
+    provider.url as unknown as string,
   ) as unknown as UrlWithOrigin;
   provider.url.origin = provider.url.href.replace(
     new RegExp(`${_.escapeRegExp(provider.url.path as string)}$`),
-    ''
+    '',
   );
 });
 

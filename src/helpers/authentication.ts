@@ -4,19 +4,19 @@ import _ from 'lodash';
 import config from '~/config';
 import { APIError, BadRequestError, UnauthorizedError } from '~/errors';
 
-import fetch, { FetchOptions, RetryOptions } from './fetch';
+import fetch, { RequestInitWithRetry } from './fetch';
 import serializeFormData from './serializeFormData';
 import stringifyJSONParams from './stringifyJSONParams';
 
 export interface AuthenticationHeaders {
-  requestInterceptor: (options: FetchOptions) => FetchOptions;
+  requestInterceptor: (options: RequestInit) => RequestInit;
 }
 export interface Authentication {
   authenticateAsUser: (user: string) => Promise<AuthenticationHeaders>;
   authenticateWith: (token: string) => AuthenticationHeaders;
   fetchToken: (
     body: Record<string, string>,
-    options?: FetchOptions & RetryOptions
+    options?: RequestInitWithRetry,
   ) => Promise<Token>;
   get: (user?: string) => Promise<string>;
   store: (user: string, token: Token) => void;
@@ -97,7 +97,7 @@ const unwrapPromises = async (object: Record<string, Promise<Token>>) => {
   await Promise.all(
     _.map(object, async (value, key) => {
       unwrapped[key] = await value;
-    })
+    }),
   );
 
   return unwrapped;
@@ -123,7 +123,7 @@ const fixturesFor = (application: string): Record<string, Token> => {
 
 export default (
   application: string,
-  { persisted = false } = {}
+  { persisted = false } = {},
 ): Authentication => {
   if (authentications[application]) return authentications[application];
 
@@ -133,7 +133,7 @@ export default (
 
       return {
         cache: wrapInPromises(
-          isTest ? fixturesFor(application) : storage.load()
+          isTest ? fixturesFor(application) : storage.load(),
         ),
         save: () => {
           unwrapPromises(tokens.cache).then(storage.save);
@@ -149,14 +149,14 @@ export default (
 
   const authentication = {
     authenticateAsUser: async (
-      user: string
+      user: string,
     ): Promise<AuthenticationHeaders> => {
       const token = await authentication.get(user);
 
       if (!token) {
         throw new BadRequestError(
           application,
-          `User#${user} has not authorize the application`
+          `User#${user} has not authorize the application`,
         );
       }
 
@@ -168,9 +168,11 @@ export default (
       }
 
       return {
-        requestInterceptor: (request: FetchOptions) => {
+        requestInterceptor: (request: RequestInit) => {
           request.headers = request.headers || {};
-          request.headers.Authorization = `Bearer ${token}`;
+          (
+            request.headers as Record<string, string>
+          ).Authorization = `Bearer ${token}`;
 
           return request;
         },
@@ -178,7 +180,7 @@ export default (
     },
     fetchToken: async (
       body: Record<string, string>,
-      options?: FetchOptions & RetryOptions
+      options?: RequestInitWithRetry,
     ): Promise<Token> => {
       const {
         authentication: {
@@ -192,6 +194,7 @@ export default (
           ...tokenOptions,
           ...body,
         }),
+        duplex: 'half',
         headers: headersFor(serializer),
         method: 'post',
         ...options,
@@ -200,13 +203,13 @@ export default (
       if (!response.ok) {
         throw new APIError(
           application,
-          `Failed fetching token: ${response.statusText}`
+          `Failed fetching token: ${response.statusText}`,
         );
       }
 
       const token = camelCaseKeys(
         response.body as Parameters<typeof camelCaseKeys>[0],
-        { deep: true }
+        { deep: true },
       );
 
       return {
@@ -248,26 +251,26 @@ export default (
     } else {
       throw new BadRequestError(
         application,
-        `Missing refresh token for User#${user}`
+        `Missing refresh token for User#${user}`,
       );
     }
 
     config.logger.debug(
-      `[API][${application}][User#${user}] Starting Refreshing Token`
+      `[API][${application}][User#${user}] Starting Refreshing Token`,
     );
 
     tokens.cache[user] = authentication
       .fetchToken(options)
       .then((newToken) => {
         config.logger.debug(
-          `[API][${application}][User#${user}] Completed Refreshing Token`
+          `[API][${application}][User#${user}] Completed Refreshing Token`,
         );
 
         return newToken;
       })
       .catch((error) => {
         config.logger.debug(
-          `[API][${application}][User#${user}] Failed Refreshing Token`
+          `[API][${application}][User#${user}] Failed Refreshing Token`,
         );
 
         // reset cached rejected promise with what it was to keep the refresh token

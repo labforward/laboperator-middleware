@@ -31,7 +31,7 @@ describe('Built-in Routes', () => {
         const client = await laboperator.client;
 
         expect(await client.authentication.get('1')).toEqual(
-          'laboperator-access-token'
+          'laboperator-access-token',
         );
       });
     });
@@ -39,7 +39,7 @@ describe('Built-in Routes', () => {
     describe('given missing code (e.g. user deny the authorization)', () => {
       it('response 200', async () => {
         const response = await server().get(
-          '/auth/callback?error=access_denied&error_description=The+resource+owner+or+authorization+server+denied+the+request.'
+          '/auth/callback?error=access_denied&error_description=The+resource+owner+or+authorization+server+denied+the+request.',
         );
 
         expect(response).toHaveProperty('status', 200);

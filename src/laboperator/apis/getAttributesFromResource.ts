@@ -2,7 +2,7 @@ import camelCaseKeys from 'camelcase-keys';
 import _ from 'lodash';
 
 const getAttributesFromResource = (
-  raw: ResourceData | Resource
+  raw: ResourceData | Resource,
 ): Attributes => {
   const resource = (raw as ResourceData).data || (raw as Resource);
   const relationships = _.reduce(
@@ -18,7 +18,7 @@ const getAttributesFromResource = (
         [relationKey]: relationValue,
       };
     },
-    {}
+    {},
   );
 
   return {

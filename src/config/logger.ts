@@ -27,14 +27,14 @@ const logger = winston.createLogger({
           filename: 'log/test.log',
           format: winston.format.combine(
             winston.format.timestamp(),
-            logFormatter
+            logFormatter,
           ),
         })
       : new winston.transports.Console({
           format: winston.format.combine(
             winston.format.colorize(),
             winston.format.timestamp(),
-            logFormatter
+            logFormatter,
           ),
         }),
   ],

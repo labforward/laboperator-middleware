@@ -1,28 +1,36 @@
-import fetchRetryFactory from 'fetch-retry';
+import fetchRetryFactory, {
+  RequestInitWithRetry,
+  RequestInitRetryParams,
+} from 'fetch-retry';
 import { HttpsProxyAgent } from 'https-proxy-agent';
 import _ from 'lodash';
-import { FetchOptions, RetryOptions, http } from 'swagger-client';
+import { http } from 'swagger-client';
 
-export { FetchOptions, RetryOptions } from 'swagger-client';
+export { RequestInitWithRetry, RequestInitRetryParams } from 'fetch-retry';
 
-const fetchRetry = fetchRetryFactory(
-  http as unknown as (input: RequestInfo | URL) => Promise<Response>
-);
+const fetchRetry = fetchRetryFactory(http);
 
 export default ({
   proxy,
-  ...rest
-}: FetchOptions & RetryOptions & { proxy?: string }): Promise<Response> => {
-  const fetchOptions: FetchOptions = proxy
-    ? { agent: new HttpsProxyAgent(proxy), ...rest }
-    : rest;
-  const retryOptions: RetryOptions = _.pick(rest, [
+  url,
+  ...options
+}: RequestInitWithRetry & {
+  duplex?: 'half';
+  proxy?: string;
+  url: URL;
+}): Promise<Response> => {
+  const fetchOptions = proxy
+    ? { agent: new HttpsProxyAgent(proxy), ...options }
+    : options;
+  const retryOptions: RequestInitRetryParams = _.pick(options, [
     'retries',
     'retryDelay',
     'retryOn',
   ]);
 
+  if (options.method === 'POST') fetchOptions.duplex = 'half';
+
   return _.isEmpty(retryOptions)
-    ? http(fetchOptions)
-    : fetchRetry(fetchOptions as unknown as Request, retryOptions);
+    ? http(url, fetchOptions)
+    : fetchRetry(url, fetchOptions);
 };
