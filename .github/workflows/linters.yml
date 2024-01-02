@@ -4,10 +4,13 @@ on: [pull_request]
 
 jobs:
   eslint:
+    if: github.actor != 'dependabot[bot]'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
-      - run: yarn install
+      - run: |
+          corepack enable
+          yarn install
       - name: eslint
         uses: reviewdog/action-eslint@v1
         with:
