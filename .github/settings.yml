@@ -2,3 +2,16 @@ _extends: repo-settings
 
 repository:
   private: false
+
+branches:
+  - name: main
+    protection:
+      required_status_checks:
+        contexts:
+          - ensure_compile
+          - tests
+
+labels:
+  - name: "kodiak: merge.method = 'squash'"
+    color: '#ffa500'
+    description: Squash PR when merging

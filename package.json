@@ -48,7 +48,7 @@
     "@types/supertest": "^2.0.16",
     "eslint": "^8.56.0",
     "fetch-mock": "^9.11.0",
-    "laboperator-middleware-development": "labforward/laboperator-middleware-development#3d30dceb94eeb3a11c3e2115b85f3597ef7f3370",
+    "laboperator-middleware-development": "labforward/laboperator-middleware-development",
     "prettier": "^3.1.1",
     "typescript": "^5.2.2"
   },

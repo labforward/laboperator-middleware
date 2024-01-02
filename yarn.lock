@@ -66,7 +66,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/core@npm:^7.0.0, @babel/core@npm:^7.11.6, @babel/core@npm:^7.12.3, @babel/core@npm:^7.22.9, @babel/core@npm:^7.23.5":
+"@babel/core@npm:^7.0.0, @babel/core@npm:^7.11.6, @babel/core@npm:^7.12.3, @babel/core@npm:^7.22.9, @babel/core@npm:^7.23.7":
   version: 7.23.7
   resolution: "@babel/core@npm:7.23.7"
   dependencies:
@@ -1256,7 +1256,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/preset-env@npm:^7.23.5":
+"@babel/preset-env@npm:^7.23.7":
   version: 7.23.7
   resolution: "@babel/preset-env@npm:7.23.7"
   dependencies:
@@ -5943,13 +5943,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"laboperator-middleware-development@labforward/laboperator-middleware-development#3d30dceb94eeb3a11c3e2115b85f3597ef7f3370":
+laboperator-middleware-development@labforward/laboperator-middleware-development:
   version: 1.0.0
-  resolution: "laboperator-middleware-development@https://github.com/labforward/laboperator-middleware-development.git#commit=3d30dceb94eeb3a11c3e2115b85f3597ef7f3370"
+  resolution: "laboperator-middleware-development@https://github.com/labforward/laboperator-middleware-development.git#commit=1abd4a334df58825670d65891ee3d0191763d7b5"
   dependencies:
     "@babel/cli": "npm:^7.23.4"
-    "@babel/core": "npm:^7.23.5"
-    "@babel/preset-env": "npm:^7.23.5"
+    "@babel/core": "npm:^7.23.7"
+    "@babel/preset-env": "npm:^7.23.7"
     "@babel/preset-typescript": "npm:^7.23.3"
     "@labforward/config": "npm:~0.1.5"
     "@labforward/eslint-config-node": "npm:~0.1.5"
@@ -5975,7 +5975,7 @@ __metadata:
     yargs: "npm:^17.7.2"
   bin:
     laboperator-middleware: ./bin/cli
-  checksum: 541529151203bc0351bf5babe46be6b4973628dbbade57a4de196e8effad0f4ce6f99446f848b337443963ca016adf9f16472898f2cd619dc03be90a3b76ae65
+  checksum: 561b6b1d08b09cb825df2014951914702a20728e97aa7b109a6f4db926ff3e72ad1e62dec78b53ca797c2f5c827568f410d7f97bc4bc991d710663ab40cd1f68
   languageName: node
   linkType: hard
 
@@ -5997,7 +5997,7 @@ __metadata:
     http-errors: "npm:^2.0.0"
     http-status-codes: "npm:^2.3.0"
     https-proxy-agent: "npm:^7.0.2"
-    laboperator-middleware-development: "labforward/laboperator-middleware-development#3d30dceb94eeb3a11c3e2115b85f3597ef7f3370"
+    laboperator-middleware-development: labforward/laboperator-middleware-development
     lodash: "npm:^4.17.21"
     morgan: "npm:^1.10.0"
     prettier: "npm:^3.1.1"
