@@ -48,7 +48,6 @@ const toMilliseconds = timestamp => {
 
   return Number(new Date(timestamp)); // timestamp as milliseconds
 };
-
 const isExpired = token => {
   const createdAt = toMilliseconds(token.createdAt);
   const expiresIn = toMilliseconds(token.expiresIn);
