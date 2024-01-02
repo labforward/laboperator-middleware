@@ -4,5 +4,31 @@ updates:
     directory: '/'
     schedule:
       interval: daily
-      time: '04:00'
+      time: "06:00"
+      timezone: "Europe/Berlin"
     rebase-strategy: disabled
+    labels:
+      - "dependencies"
+      - "automerge"
+      - "kodiak: merge.method = 'squash'"
+    groups:
+      babel:
+        patterns:
+          - "@babel/*"
+          - "babel-*"
+          - "browserslist"
+      eslint:
+        patterns:
+          - "@eslint-*"
+          - "@eslint/*"
+          - "eslint-*"
+          - "eslint"
+      jest:
+        patterns:
+          - "@jest/"
+          - "jest-*"
+          - "jest"
+          - "@types/jest"
+      labforward:
+        patterns:
+          - "@labforward/*"
