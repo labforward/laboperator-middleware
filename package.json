@@ -48,9 +48,9 @@
     "@types/supertest": "^2.0.16",
     "eslint": "^8.56.0",
     "fetch-mock": "^9.11.0",
-    "laboperator-middleware-development": "labforward/laboperator-middleware-development#526f8d98072ead649e39ac45b0ab2a95d8865068",
+    "laboperator-middleware-development": "labforward/laboperator-middleware-development#3d30dceb94eeb3a11c3e2115b85f3597ef7f3370",
     "prettier": "^3.1.1",
     "typescript": "^5.2.2"
   },
-  "packageManager": "yarn@1.22.19"
+  "packageManager": "yarn@4.0.2"
 }

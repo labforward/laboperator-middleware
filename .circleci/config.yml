@@ -41,10 +41,13 @@ jobs:
     steps:
       - checkout
       - *load_cache
-      - run: yarn install --frozen-lockfile
+      - run: |
+          sudo corepack enable
+          corepack prepare yarn@4.0.2 --activate
+          yarn install --frozen-lockfile
       - *save_cache
       - run:
-          command: yarn jest --ci --reporters=default --reporters=jest-junit
+          command: yarn test --ci --reporters=default --reporters=jest-junit
           environment:
             JEST_JUNIT_OUTPUT_DIR: /tmp/reports
       - store_test_results:
@@ -55,7 +58,10 @@ jobs:
     steps:
       - checkout
       - *load_cache
-      - run: yarn install --frozen-lockfile
+      - run: |
+          sudo corepack enable
+          corepack prepare yarn@4.0.2 --activate
+          yarn install --frozen-lockfile
       - *save_cache
       - run: yarn laboperator-middleware compile
       - run: |

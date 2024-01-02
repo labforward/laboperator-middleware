@@ -1,5 +1,19 @@
+# VS Code configuration files
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# NPM dependencies
+.yarn/*
+node_modules/
+
+# macOS
+.DS_Store
+
+# Misc
 build
-log
-node_modules
-storage/tokens-*
-yarn-error.log
+dist
+storage
+*.log
