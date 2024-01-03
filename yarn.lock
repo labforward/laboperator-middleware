@@ -2267,7 +2267,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/superagent@npm:*, @types/superagent@npm:^8.1.0":
+"@types/superagent@npm:^8.1.0":
   version: 8.1.1
   resolution: "@types/superagent@npm:8.1.1"
   dependencies:
@@ -2275,15 +2275,6 @@ __metadata:
     "@types/methods": "npm:^1.1.4"
     "@types/node": "npm:*"
   checksum: 8602854c2ba6a88fa9947db7fde5297a0e2b98b629144bb95f4a41dce66864edf5d886ac66df28aeb2b929bd7f37e517c2d9f9043efc61ee8064cd118f3ef7c0
-  languageName: node
-  linkType: hard
-
-"@types/supertest@npm:^2.0.16":
-  version: 2.0.16
-  resolution: "@types/supertest@npm:2.0.16"
-  dependencies:
-    "@types/superagent": "npm:*"
-  checksum: e1b4a4d788c19cd92a3f2e6d0979fb0f679c49aefae2011895a4d9c35aa960d43463aca8783a0b3382bbf0b4eb7ceaf8752d7dc80b8f5a9644fa14e1b1bdbc90
   languageName: node
   linkType: hard
 
@@ -5984,7 +5975,7 @@ laboperator-middleware-development@labforward/laboperator-middleware-development
   resolution: "laboperator-middleware@workspace:."
   dependencies:
     "@types/node": "npm:^20.10.6"
-    "@types/supertest": "npm:^2.0.16"
+    "@types/supertest": "npm:^6.0.2"
     ajv: "npm:^8.12.0"
     ajv-formats: "npm:^2.1.1"
     camelcase-keys: "npm:^7.0.2"
