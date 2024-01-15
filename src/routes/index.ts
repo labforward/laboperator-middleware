@@ -22,6 +22,6 @@ export default (app: Express): void => {
           res.send('<script>window.close()</script>');
         },
       });
-    })
+    }),
   );
 };

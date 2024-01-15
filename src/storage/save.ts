@@ -12,7 +12,7 @@ export default (path: string) =>
       config.logger.debug(`[STORE] Completed saving into ${path}`);
     } catch (e) {
       config.logger.debug(
-        `[STORE] Failed saving into ${path}: ${(e as Error).message}`
+        `[STORE] Failed saving into ${path}: ${(e as Error).message}`,
       );
     }
   };

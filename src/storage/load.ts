@@ -16,7 +16,7 @@ export default (path: string): ReturnType<JSON['parse']> =>
       config.logger.debug(`[STORE] Completed loading from ${path}`);
     } catch (e) {
       config.logger.debug(
-        `[STORE] Failed loading from ${path}: ${(e as Error).message}`
+        `[STORE] Failed loading from ${path}: ${(e as Error).message}`,
       );
     }
 

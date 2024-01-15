@@ -3,7 +3,7 @@ import { AuthorizationDeniedError } from '~/errors';
 import getTokenInfo from './getTokenInfo';
 
 export default async (
-  query: { code?: string; error_description?: string } = {}
+  query: { code?: string; error_description?: string } = {},
 ): Promise<void> => {
   if (!query.code) throw new AuthorizationDeniedError('laboperator', query);
 

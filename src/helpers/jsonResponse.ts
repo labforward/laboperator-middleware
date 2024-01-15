@@ -8,7 +8,7 @@ interface JsonResponse<T> {
 
 export default (
   code: string | number,
-  details = HttpStatus.getStatusText(code)
+  details = HttpStatus.getStatusText(code),
 ): JsonResponse<typeof details> => ({
   code,
   details,

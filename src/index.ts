@@ -39,7 +39,7 @@ app.use(
     err: Error | FetchErrorResponse,
     _req: Request,
     res: Response,
-    _next: NextFunction
+    _next: NextFunction,
   ): void => {
     const status = (err as FetchErrorResponse).status || 500;
 
@@ -47,7 +47,7 @@ app.use(
 
     res.status(status);
     res.json(jsonResponse(status, getErrorMessage(err)));
-  }
+  },
 );
 
 export default app;
