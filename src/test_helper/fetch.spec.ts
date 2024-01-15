@@ -25,7 +25,7 @@ const mocks: Record<string, Array<Fixture>> = {};
 
 export const addFixtures = (
   provider: string,
-  fixtures: Array<Fixture>
+  fixtures: Array<Fixture>,
 ): void => {
   mocks[provider] = [...(mocks[provider] || []), ...fixtures];
 };
@@ -33,7 +33,7 @@ export const addFixtures = (
 const headers = { 'Content-Type': 'application/json' };
 const normalize = (
   object: Fixture,
-  key: 'response' | 'request'
+  key: 'response' | 'request',
 ): Fixture[typeof key] => {
   const raw: Fixture[typeof key] = (object || ({} as Fixture))[key || ''] || {};
 
@@ -65,7 +65,7 @@ const getMock = (url: string, { body, method }: MockRequest) => {
         (mock) =>
           mock.endpoint === endpoint &&
           _.lowerCase(mock.method || 'get') === _.lowerCase(method || 'get') &&
-          _.isMatch(parseBody(body as string), normalize(mock, 'request').body)
+          _.isMatch(parseBody(body as string), normalize(mock, 'request').body),
       )
     : undefined;
 };

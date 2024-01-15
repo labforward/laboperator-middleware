@@ -27,11 +27,11 @@ const fetchDefaultToken = async () => {
         config.logger.debug(
           `[API][laboperator][Attempt#${
             attempt + 1
-          }] Failed to connect to Laboperator API! Retrying in ${seconds} seconds`
+          }] Failed to connect to Laboperator API! Retrying in ${seconds} seconds`,
         );
         return seconds * 1000;
       },
-    }
+    },
   );
 
   authentication.store('default', response);

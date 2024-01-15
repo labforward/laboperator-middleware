@@ -9,14 +9,14 @@ interface TokenInfo {
 
 export default async (token: string): Promise<TokenInfo> => {
   const url = new URL(
-    config.providers.laboperator.authentication.tokenInfo.url
+    config.providers.laboperator.authentication.tokenInfo.url,
   );
 
   url.searchParams.append('access_token', token);
 
   const response = await fetch({ url });
 
-  return camelCaseKeys<TokenInfo>(response.body as unknown as TokenInfo, {
+  return camelCaseKeys(response.body as unknown as Record<string, unknown>, {
     deep: true,
-  });
+  }) as unknown as TokenInfo;
 };

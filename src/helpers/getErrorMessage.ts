@@ -1,7 +1,7 @@
 import { FetchErrorResponse } from 'swagger-client';
 
 const getErrorMessageFromFetchError = (
-  e: FetchErrorResponse
+  e: FetchErrorResponse,
 ): string | undefined => {
   if (!e.response) return undefined;
 

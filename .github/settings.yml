@@ -10,8 +10,3 @@ branches:
         contexts:
           - ensure_compile
           - tests
-
-labels:
-  - name: "kodiak: merge.method = 'squash'"
-    color: '#ffa500'
-    description: Squash PR when merging
