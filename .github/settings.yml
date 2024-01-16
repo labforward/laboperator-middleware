@@ -8,5 +8,4 @@ branches:
     protection:
       required_status_checks:
         contexts:
-          - ensure_compile
           - tests
