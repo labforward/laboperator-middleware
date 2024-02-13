@@ -4847,13 +4847,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"https-proxy-agent@npm:^7.0.1, https-proxy-agent@npm:^7.0.2":
-  version: 7.0.2
-  resolution: "https-proxy-agent@npm:7.0.2"
+"https-proxy-agent@npm:^7.0.1, https-proxy-agent@npm:^7.0.3":
+  version: 7.0.3
+  resolution: "https-proxy-agent@npm:7.0.3"
   dependencies:
     agent-base: "npm:^7.0.2"
     debug: "npm:4"
-  checksum: 7735eb90073db087e7e79312e3d97c8c04baf7ea7ca7b013382b6a45abbaa61b281041a98f4e13c8c80d88f843785bcc84ba189165b4b4087b1e3496ba656d77
+  checksum: 0a5d4beb8f3e71755e3dc62e421aceb3df8bf0d20892dfbdc54de7791f9d34be222c6acb8c83930b138a4bab9387a9f4e06ea0b171cda8e167c3aa72d437f8d8
   languageName: node
   linkType: hard
 
@@ -5994,7 +5994,7 @@ laboperator-middleware-development@labforward/laboperator-middleware-development
     fs-extra: "npm:^11.2.0"
     http-errors: "npm:^2.0.0"
     http-status-codes: "npm:^2.3.0"
-    https-proxy-agent: "npm:^7.0.2"
+    https-proxy-agent: "npm:^7.0.3"
     laboperator-middleware-development: labforward/laboperator-middleware-development
     lodash: "npm:^4.17.21"
     morgan: "npm:^1.10.0"
