@@ -6003,7 +6003,7 @@ laboperator-middleware-development@labforward/laboperator-middleware-development
     swagger-client: "npm:^3.18.5"
     typescript: "npm:^5.4.2"
     winston: "npm:^3.12.0"
-    yaml: "npm:^2.4.0"
+    yaml: "npm:^2.4.1"
     yargs: "npm:^17.7.2"
   languageName: unknown
   linkType: soft
@@ -8577,12 +8577,12 @@ laboperator-middleware-development@labforward/laboperator-middleware-development
   languageName: node
   linkType: hard
 
-"yaml@npm:^2.4.0":
-  version: 2.4.0
-  resolution: "yaml@npm:2.4.0"
+"yaml@npm:^2.4.1":
+  version: 2.4.1
+  resolution: "yaml@npm:2.4.1"
   bin:
     yaml: bin.mjs
-  checksum: 97ab0b5a0714c92e4dd75120a6a63e470b0adc282afae0a701bf38f8c42cbf6429fcd6aca883e3a63c68936ab841862e6c69e2d66d355c3e4fc7cfd346af2108
+  checksum: 816057dbaea16a7dfb0b868ace930f143dece96bbb4c4fbb6f38aa389166f897240d9fa535dbfd6b1b0d9442416f4abcc698e63f82394d0c67b329aa6c2be576
   languageName: node
   linkType: hard
 
