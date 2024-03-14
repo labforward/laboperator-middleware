@@ -14,5 +14,5 @@ node_modules/
 
 # Misc
 build
-storage
+storage/tokens-*
 *.log
