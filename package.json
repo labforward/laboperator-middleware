@@ -26,7 +26,7 @@
   },
   "dependencies": {
     "ajv": "^8.12.0",
-    "ajv-formats": "^2.1.1",
+    "ajv-formats": "^3.0.1",
     "camelcase-keys": "^9.1.3",
     "express": "^4.19.2",
     "fetch-retry": "^5.0.6",
