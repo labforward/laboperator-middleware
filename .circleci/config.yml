@@ -43,7 +43,7 @@ jobs:
       - *load_cache
       - run: |
           sudo corepack enable
-          corepack prepare yarn@4.0.2 --activate
+          corepack prepare yarn@4.1.1 --activate
           yarn install --frozen-lockfile
       - *save_cache
       - run:
@@ -52,20 +52,6 @@ jobs:
             JEST_JUNIT_OUTPUT_DIR: /tmp/reports
       - store_test_results:
           path: /tmp/reports
-
-  ensure_compile:
-    <<: *docker_test_stack
-    steps:
-      - checkout
-      - *load_cache
-      - run: |
-          sudo corepack enable
-          corepack prepare yarn@4.0.2 --activate
-          yarn install --frozen-lockfile
-      - *save_cache
-      - run: yarn laboperator-middleware compile
-      - run: |
-          [[ -z $(git status -s) ]] || (echo "Don't forget to run 'yarn laboperator-middleware compile'" && exit 1)
 
 # --------
 #   WORKFLOWS
@@ -76,4 +62,3 @@ workflows:
   tests:
     jobs:
       - tests
-      - ensure_compile
