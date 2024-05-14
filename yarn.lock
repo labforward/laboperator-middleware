@@ -6006,7 +6006,7 @@ laboperator-middleware-development@labforward/laboperator-middleware-development
     lodash: "npm:^4.17.21"
     morgan: "npm:^1.10.0"
     prettier: "npm:^3.2.5"
-    snakecase-keys: "npm:^8.0.0"
+    snakecase-keys: "npm:^8.0.1"
     swagger-client: "npm:^3.18.5"
     typescript: "npm:^5.4.5"
     winston: "npm:^3.13.0"
@@ -7571,14 +7571,14 @@ laboperator-middleware-development@labforward/laboperator-middleware-development
   languageName: node
   linkType: hard
 
-"snakecase-keys@npm:^8.0.0":
-  version: 8.0.0
-  resolution: "snakecase-keys@npm:8.0.0"
+"snakecase-keys@npm:^8.0.1":
+  version: 8.0.1
+  resolution: "snakecase-keys@npm:8.0.1"
   dependencies:
     map-obj: "npm:^4.1.0"
     snake-case: "npm:^3.0.4"
     type-fest: "npm:^4.15.0"
-  checksum: 10c0/f2f2491f409a2100437e60781df42b2e92d28946be028930cc682be5e681c090a2c69d7f99c08d0eb78a38ae10c9fb7e088a3aa7f528048542481d0e13db4105
+  checksum: 10c0/3615126462e413fe5e1637c945362e99c3ac497bc49d867397547ab1a87ff2827ae890d1aa022ef06c27cb3924bcb3714db2f4e76770e6ebd3625f3e16d79d27
   languageName: node
   linkType: hard
 
