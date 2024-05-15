@@ -19,7 +19,10 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: lts/*
-      - run: corepack enable
+
+      - run: |
+          corepack enable
+          yarn
 
       - name: Dedupe dependencies
         if: startsWith(github.head_ref, 'dependabot/')
