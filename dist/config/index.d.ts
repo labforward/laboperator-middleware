@@ -1,4 +1,3 @@
-/// <reference types="node" />
 import { Url } from 'url';
 import logger, { Logger } from './logger';
 interface UrlWithOrigin extends Url {
