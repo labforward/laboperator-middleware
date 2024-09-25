@@ -2096,6 +2096,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/glob-to-regexp@npm:^0.4.4":
+  version: 0.4.4
+  resolution: "@types/glob-to-regexp@npm:0.4.4"
+  checksum: 10c0/7288ff853850d8302a8770a3698b187fc3970ad12ee6427f0b3758a3e7a0ebb0bd993abc6ebaaa979d09695b4194157d2bfaa7601b0fb9ed72c688b4c1298b88
+  languageName: node
+  linkType: hard
+
 "@types/graceful-fs@npm:^4.1.3":
   version: 4.1.6
   resolution: "@types/graceful-fs@npm:4.1.6"
@@ -3528,6 +3535,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"dequal@npm:^2.0.3":
+  version: 2.0.3
+  resolution: "dequal@npm:2.0.3"
+  checksum: 10c0/f98860cdf58b64991ae10205137c0e97d384c3a4edc7f807603887b7c4b850af1224a33d88012009f150861cbee4fa2d322c4cc04b9313bee312e47f6ecaa888
+  languageName: node
+  linkType: hard
+
 "destroy@npm:1.2.0":
   version: 1.2.0
   resolution: "destroy@npm:1.2.0"
@@ -4301,6 +4315,22 @@ __metadata:
   languageName: node
   linkType: hard
 
+"fetch-mock@npm:^11.1.4":
+  version: 11.1.4
+  resolution: "fetch-mock@npm:11.1.4"
+  dependencies:
+    "@types/glob-to-regexp": "npm:^0.4.4"
+    dequal: "npm:^2.0.3"
+    glob-to-regexp: "npm:^0.4.1"
+    is-subset: "npm:^0.1.1"
+    regexparam: "npm:^3.0.0"
+  peerDependenciesMeta:
+    node-fetch:
+      optional: true
+  checksum: 10c0/06909ac2e9bf6b32aca054d44dc09c94f847e2f67b7d3eaac570dc91e7fc00332eb262ba2af3f2fabc17e1798f069c6e07f7cc08e66dfcc86b3d3120795c5f12
+  languageName: node
+  linkType: hard
+
 "fetch-mock@npm:^9.11.0":
   version: 9.11.0
   resolution: "fetch-mock@npm:9.11.0"
@@ -4661,7 +4691,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"glob-to-regexp@npm:^0.4.0":
+"glob-to-regexp@npm:^0.4.0, glob-to-regexp@npm:^0.4.1":
   version: 0.4.1
   resolution: "glob-to-regexp@npm:0.4.1"
   checksum: 10c0/0486925072d7a916f052842772b61c3e86247f0a80cc0deb9b5a3e8a1a9faad5b04fb6f58986a09f34d3e96cd2a22a24b7e9882fb1cf904c31e9a310de96c429
@@ -5982,7 +6012,7 @@ laboperator-middleware-development@labforward/laboperator-middleware-development
     camelcase-keys: "npm:^9.1.3"
     eslint: "npm:^8.57.1"
     express: "npm:^4.21.0"
-    fetch-mock: "npm:^9.11.0"
+    fetch-mock: "npm:^11.1.4"
     fetch-retry: "npm:^5.0.6"
     form-data: "npm:^4.0.0"
     fs-extra: "npm:^11.2.0"
@@ -7132,6 +7162,13 @@ laboperator-middleware-development@labforward/laboperator-middleware-development
     es-errors: "npm:^1.3.0"
     set-function-name: "npm:^2.0.1"
   checksum: 10c0/0f3fc4f580d9c349f8b560b012725eb9c002f36daa0041b3fbf6f4238cb05932191a4d7d5db3b5e2caa336d5150ad0402ed2be81f711f9308fe7e1a9bf9bd552
+  languageName: node
+  linkType: hard
+
+"regexparam@npm:^3.0.0":
+  version: 3.0.0
+  resolution: "regexparam@npm:3.0.0"
+  checksum: 10c0/a6430d7b97d5a7d5518f37a850b6b73aab479029d02f46af4fa0e8e4a1d7aad05b7a0d2d10c86ded21a14d5f0fa4c68525f873a5fca2efeefcccd93c36627459
   languageName: node
   linkType: hard
 
