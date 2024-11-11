@@ -1,3 +1,4 @@
+import { HttpError } from 'http-errors';
 import winston from 'winston';
 
 export { Logger } from 'winston';
@@ -7,7 +8,7 @@ const logFormatter = winston.format.printf((info) => {
 
   if (response) {
     // http error
-    const { body, status, statusText } = response;
+    const { body, status, statusText } = response as HttpError;
 
     return `${timestamp} ${level}: ${status} ${statusText}
 ${timestamp} ${level}: ${JSON.stringify(body, undefined, 2)}
