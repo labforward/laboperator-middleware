@@ -50,7 +50,7 @@
     "fetch-mock": "^9.11.0",
     "laboperator-middleware-development": "labforward/laboperator-middleware-development",
     "prettier": "^3.5.3",
-    "typescript": "^5.7.3"
+    "typescript": "^5.8.2"
   },
   "packageManager": "yarn@4.1.1"
 }
