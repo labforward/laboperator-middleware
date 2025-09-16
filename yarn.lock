@@ -2223,16 +2223,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:*":
-  version: 24.4.0
-  resolution: "@types/node@npm:24.4.0"
-  dependencies:
-    undici-types: "npm:~7.11.0"
-  checksum: 10c0/3aefa4c6b006b3478f2d28a48d830ab7350ce24efdaf352011418e3ee17ed7683ca9c0a1840e770685ce78f413344badafa91e034be02488efe2eb6b612bd542
-  languageName: node
-  linkType: hard
-
-"@types/node@npm:^24.5.0":
+"@types/node@npm:*, @types/node@npm:^24.5.0":
   version: 24.5.0
   resolution: "@types/node@npm:24.5.0"
   dependencies:
@@ -8205,13 +8196,6 @@ laboperator-middleware-development@labforward/laboperator-middleware-development
   version: 2.0.5
   resolution: "undefsafe@npm:2.0.5"
   checksum: 10c0/96c0466a5fbf395917974a921d5d4eee67bca4b30d3a31ce7e621e0228c479cf893e783a109af6e14329b52fe2f0cb4108665fad2b87b0018c0df6ac771261d5
-  languageName: node
-  linkType: hard
-
-"undici-types@npm:~7.11.0":
-  version: 7.11.0
-  resolution: "undici-types@npm:7.11.0"
-  checksum: 10c0/24ff69baeaebc7d09f4dae68564df850b4ff561810148ff6c37d3fc64dd1460c55e59e604420495e73b1fb48594a1c98e69f6732086a24e01b88f2d926378af1
   languageName: node
   linkType: hard
 
