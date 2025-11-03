@@ -3044,15 +3044,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"camelcase-keys@npm:^10.0.0":
-  version: 10.0.0
-  resolution: "camelcase-keys@npm:10.0.0"
+"camelcase-keys@npm:^10.0.1":
+  version: 10.0.1
+  resolution: "camelcase-keys@npm:10.0.1"
   dependencies:
     camelcase: "npm:^8.0.0"
     map-obj: "npm:5.0.2"
     quick-lru: "npm:^7.1.0"
     type-fest: "npm:^4.41.0"
-  checksum: 10c0/315a8e9baaea792535b965b6debad926937ce6dd2bc48f4082634977a75c7e7aa90957c53e86c72853c9f82e3b0664a95dbfc8c8579df78891dfc464aa50459c
+  checksum: 10c0/f48204c0809ba82e2862dd39ae04db8a35938c9670c3f6b525c9ed8e46136a69c80e052bd5c76711844e248d530aced5e42d25b21e5d701ae5bfddf18152a57b
   languageName: node
   linkType: hard
 
@@ -6005,7 +6005,7 @@ laboperator-middleware-development@labforward/laboperator-middleware-development
     "@types/supertest": "npm:^6.0.3"
     ajv: "npm:^8.17.1"
     ajv-formats: "npm:^3.0.1"
-    camelcase-keys: "npm:^10.0.0"
+    camelcase-keys: "npm:^10.0.1"
     eslint: "npm:^8.57.1"
     express: "npm:^5.1.0"
     fetch-mock: "npm:^9.11.0"
