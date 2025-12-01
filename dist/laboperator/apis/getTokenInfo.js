@@ -7,7 +7,7 @@ exports.default = void 0;
 var _camelcaseKeys = _interopRequireDefault(require("camelcase-keys"));
 var _config = _interopRequireDefault(require("../../config"));
 var _helpers = require("../../helpers");
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 var _default = async token => {
   const url = new URL(_config.default.providers.laboperator.authentication.tokenInfo.url);
   url.searchParams.append('access_token', token);

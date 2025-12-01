@@ -8,7 +8,7 @@ var _fetchMock = _interopRequireDefault(require("fetch-mock"));
 var _lodash = _interopRequireDefault(require("lodash"));
 var _config = _interopRequireDefault(require("../config"));
 var _fixtures = _interopRequireDefault(require("./fixtures"));
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 const mocks = {};

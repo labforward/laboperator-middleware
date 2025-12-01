@@ -52,4 +52,4 @@ var _jsonResponse = _interopRequireDefault(require("./jsonResponse"));
 var _propagateErrors = _interopRequireDefault(require("./propagateErrors"));
 var _requireRelative = _interopRequireDefault(require("./requireRelative"));
 var _stringifyJSONParams = _interopRequireDefault(require("./stringifyJSONParams"));
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }

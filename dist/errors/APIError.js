@@ -5,7 +5,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 var _config = _interopRequireDefault(require("../config"));
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 class APIError extends Error {
   constructor(application, message) {
     _config.default.logger.error(`[API][${application}] Error: ${message}`);

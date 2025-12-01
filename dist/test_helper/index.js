@@ -25,4 +25,4 @@ Object.keys(_fetch).forEach(function (key) {
   });
 });
 var _server = _interopRequireDefault(require("./server.spec"));
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }

@@ -18,7 +18,7 @@ var _ajvFormats = _interopRequireDefault(require("ajv-formats"));
 var _lodash = _interopRequireDefault(require("lodash"));
 var _yaml = _interopRequireDefault(require("yaml"));
 var _logger = _interopRequireDefault(require("./logger"));
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 const config = {
   logger: _logger.default,
   providers: {}

@@ -11,7 +11,7 @@ var _errors = require("../errors");
 var _fetch = _interopRequireDefault(require("./fetch"));
 var _serializeFormData = _interopRequireDefault(require("./serializeFormData"));
 var _stringifyJSONParams = _interopRequireDefault(require("./stringifyJSONParams"));
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 const authentications = {};
 const emptyToken = {
   accessToken: '',

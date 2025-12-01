@@ -6,7 +6,7 @@ Object.defineProperty(exports, "__esModule", {
 exports.default = void 0;
 var _camelcaseKeys = _interopRequireDefault(require("camelcase-keys"));
 var _lodash = _interopRequireDefault(require("lodash"));
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 const getAttributesFromResource = raw => {
   const resource = raw.data || raw;
   const relationships = _lodash.default.reduce(resource.relationships, (prev, value, key) => {

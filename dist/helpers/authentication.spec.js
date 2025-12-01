@@ -1,7 +1,7 @@
 "use strict";
 
 var _authentication = _interopRequireDefault(require("./authentication"));
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 describe('Authentication', () => {
   it('re-resolve previously failing authentication', async () => {
     jest.useFakeTimers().setSystemTime(0);
