@@ -1,1 +1,1 @@
-module.exports = require('laboperator-middleware-development/jest.config');
+module.exports = require('middleware-development/jest.config');

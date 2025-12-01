@@ -1,7 +1,6 @@
 name: Auto Commits
 
-on:
-  pull_request
+on: pull_request
 
 permissions:
   contents: write
@@ -38,7 +37,7 @@ jobs:
 
       - name: Update build
         run: |
-          yarn laboperator-middleware compile
+          yarn middleware compile
 
           if [[ `git status -s` ]]; then \
             git add .
