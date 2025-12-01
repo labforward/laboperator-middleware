@@ -31,4 +31,4 @@ var _APIError = _interopRequireDefault(require("./APIError"));
 var _AuthorizationDeniedError = _interopRequireDefault(require("./AuthorizationDeniedError"));
 var _BadRequestError = _interopRequireDefault(require("./BadRequestError"));
 var _UnauthorizedError = _interopRequireDefault(require("./UnauthorizedError"));
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }

@@ -11,7 +11,7 @@ var _morgan = _interopRequireDefault(require("morgan"));
 var _config = _interopRequireDefault(require("./config"));
 var _helpers = require("./helpers");
 var _routes = _interopRequireDefault(require("./routes"));
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 const app = (0, _express.default)();
 const stream = {
   write: message => _config.default.logger.info(message)

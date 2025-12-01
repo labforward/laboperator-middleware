@@ -20,7 +20,7 @@ var _fetchRetry = _interopRequireDefault(require("fetch-retry"));
 var _httpsProxyAgent = require("https-proxy-agent");
 var _lodash = _interopRequireDefault(require("lodash"));
 var _swaggerClient = require("swagger-client");
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 const fetchRetry = (0, _fetchRetry.default)(_swaggerClient.http);
 var _default = ({
   proxy,

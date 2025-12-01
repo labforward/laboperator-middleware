@@ -6,7 +6,7 @@ Object.defineProperty(exports, "__esModule", {
 exports.default = void 0;
 var _fs = _interopRequireDefault(require("fs"));
 var _config = _interopRequireDefault(require("../config"));
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 var _default = path => data => {
   try {
     _config.default.logger.debug(`[STORE] Started saving into ${path}`);

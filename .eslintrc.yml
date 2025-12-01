@@ -1,2 +1,5 @@
 extends:
-  - './node_modules/laboperator-middleware-development/.eslintrc.yml'
+  - './node_modules/middleware-development/.eslintrc.yml'
+
+rules:
+  '@typescript-eslint/no-require-imports': 'off'

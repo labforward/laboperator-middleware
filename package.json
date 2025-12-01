@@ -2,8 +2,8 @@
   "name": "laboperator-middleware",
   "version": "1.1.0",
   "description": "Provide common functionality for customized Laboperator middleware.",
-  "repository": "git@github.com:labforward/laboperator-middleware.git",
-  "author": "labforward GmbH",
+  "repository": "git@github.com:laboperator-gmbh/middleware.git",
+  "author": "Laboperator GmbH",
   "license": "Apache-2.0",
   "private": true,
   "exports": {
@@ -15,14 +15,14 @@
     "./test_helper": "./dist/test_helper/index.js"
   },
   "scripts": {
-    "build": "laboperator-middleware build middleware",
-    "clean": "laboperator-middleware clean",
-    "compile": "laboperator-middleware compile",
-    "lint": "eslint --fix 'src/**/*.{ts,js}'",
-    "test": "laboperator-middleware test",
-    "test:watch": "laboperator-middleware test --watch",
-    "server": "laboperator-middleware server",
-    "server:watch": "laboperator-middleware server --watch"
+    "build": "middleware build middleware",
+    "clean": "middleware clean",
+    "compile": "middleware compile",
+    "lint": "middleware lint",
+    "test": "middleware test",
+    "test:watch": "middleware test --watch",
+    "server": "middleware server",
+    "server:watch": "middleware server --watch"
   },
   "dependencies": {
     "ajv": "^8.17.1",
@@ -48,9 +48,9 @@
     "@types/supertest": "^6.0.3",
     "eslint": "^8.57.1",
     "fetch-mock": "^9.11.0",
-    "laboperator-middleware-development": "labforward/laboperator-middleware-development",
+    "middleware-development": "laboperator-gmbh/middleware-development",
     "prettier": "^3.7.3",
     "typescript": "^5.9.3"
   },
-  "packageManager": "yarn@4.1.1"
+  "packageManager": "yarn@4.12.0"
 }

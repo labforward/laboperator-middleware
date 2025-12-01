@@ -6,7 +6,7 @@ Object.defineProperty(exports, "__esModule", {
 exports.default = void 0;
 var _errors = require("../../errors");
 var _getTokenInfo = _interopRequireDefault(require("./getTokenInfo"));
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 var _default = async (query = {}) => {
   if (!query.code) throw new _errors.AuthorizationDeniedError('laboperator', query);
   const client = await require('../client').default;

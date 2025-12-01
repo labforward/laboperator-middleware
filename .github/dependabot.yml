@@ -4,12 +4,12 @@ updates:
     directory: '/'
     schedule:
       interval: daily
-      time: "06:00"
-      timezone: "Europe/Berlin"
+      time: '06:00'
+      timezone: 'Europe/Berlin'
     rebase-strategy: disabled
     labels:
-      - "dependencies"
-      - "automerge"
+      - 'dependencies'
+      - 'automerge'
       - "kodiak: merge.method = 'squash'"
     ignore:
       # Need to wait until every plugin support eslint 9
@@ -22,24 +22,28 @@ updates:
       - dependency-name: eslint
         versions:
           - '>= 9'
+      # Newer version get stuck when running with supertest in CircleCI
+      - dependency-name: fetch-mock
+        versions:
+          - '> 9.11.0'
     groups:
       babel:
         patterns:
-          - "@babel/*"
-          - "babel-*"
-          - "browserslist"
+          - '@babel/*'
+          - 'babel-*'
+          - 'browserslist'
       eslint:
         patterns:
-          - "@eslint-*"
-          - "@eslint/*"
-          - "eslint-*"
-          - "eslint"
+          - '@eslint-*'
+          - '@eslint/*'
+          - 'eslint-*'
+          - 'eslint'
       jest:
         patterns:
-          - "@jest/"
-          - "jest-*"
-          - "jest"
-          - "@types/jest"
-      labforward:
+          - '@jest/'
+          - 'jest-*'
+          - 'jest'
+          - '@types/jest'
+      laboperator-gmbh:
         patterns:
-          - "@labforward/*"
+          - '@laboperator-gmbh/*'

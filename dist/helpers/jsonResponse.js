@@ -5,7 +5,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 var _httpStatusCodes = _interopRequireDefault(require("http-status-codes"));
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 var _default = (code, details = _httpStatusCodes.default.getStatusText(code)) => ({
   code,
   details,
