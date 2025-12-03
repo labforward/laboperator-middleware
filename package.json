@@ -49,7 +49,7 @@
     "eslint": "^8.57.1",
     "fetch-mock": "^9.11.0",
     "middleware-development": "laboperator-gmbh/middleware-development",
-    "prettier": "^3.7.3",
+    "prettier": "^3.7.4",
     "typescript": "^5.9.3"
   },
   "packageManager": "yarn@4.12.0"
